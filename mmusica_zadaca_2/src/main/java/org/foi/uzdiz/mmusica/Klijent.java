@@ -38,7 +38,7 @@ public class Klijent {
 
         initializeLocations(new StreetSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
         initializeLocations(new PlaceSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
-        //initializeLocations(new AreaSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
+        initializeLocations(new AreaSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
 
         askForUserInput(new UserCommandHandler());
     }

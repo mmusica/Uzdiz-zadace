@@ -2,7 +2,6 @@ package org.foi.uzdiz.mmusica.model.locations.factory;
 
 import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.model.locations.Place;
-import org.foi.uzdiz.mmusica.model.locations.Street;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
@@ -13,7 +12,6 @@ import java.util.List;
 
 public class PlaceSaver extends LocationSaver{
     private static final int NUMBER_OF_ARGS = 3;
-
     private static final int ID = 0;
     private static final int NAZIV = 1;
     private static final int ULICE = 2;
@@ -30,20 +28,20 @@ public class PlaceSaver extends LocationSaver{
                 TerminalCommandHandler.getInstance().handleError(a, "Mjesto: Neispravan broj argumenata u redu %d".formatted(counter[0]));
 
             } else{
-                places.add(createNewStreet(a, counter));
+                places.add(createNewPlace(a, counter));
             }
             counter[0]++;
         } );
         return places;
     }
 
-    private Location createNewStreet(String[] a, int[] counter) {
+    private Location createNewPlace(String[] a, int[] counter) {
         Long id = Long.parseLong(a[ID]);
         String naziv = a[NAZIV];
         List<Location> streets = new ArrayList<>();
         String[] streetIds = a[ULICE].trim().split(",");
         var allStreets = streetRepository.getAll();
-        boolean found = false;
+        boolean found;
         for (String streetId : streetIds) {
             found = false;
            for(Location street: allStreets){

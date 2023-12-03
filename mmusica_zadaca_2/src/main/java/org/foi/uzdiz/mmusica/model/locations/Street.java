@@ -8,6 +8,7 @@ public class Street implements Location {
     private float lat2;
     private float lon2;
     private int najveciKucniBroj;
+
     @Override
     public void display() {
 
@@ -26,6 +27,12 @@ public class Street implements Location {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public Location findStreet(long id) {
+        if (this.id == id) return this;
+        else return null;
     }
 
     public void setId(Long id) {

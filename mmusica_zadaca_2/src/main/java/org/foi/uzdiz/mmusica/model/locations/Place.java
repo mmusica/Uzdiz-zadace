@@ -7,6 +7,7 @@ public class Place implements Location {
     private List<Location> locationList = new ArrayList<>();
     private Long id;
     private String naziv;
+
     @Override
     public void display() {
 
@@ -29,6 +30,15 @@ public class Place implements Location {
     @Override
     public Long getId() {
         return id;
+    }
+
+    @Override
+    public Location findStreet(long id) {
+        for (Location l : locationList) {
+            Location location = l.findStreet(id);
+            if (location != null) return location;
+        }
+        return null;
     }
 
     public void setId(Long id) {
