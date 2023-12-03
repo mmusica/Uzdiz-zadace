@@ -8,7 +8,7 @@ public abstract class DataExtractor {
           try {
                dataReader.saveData();
           }catch (RuntimeException exception){
-               throw new RuntimeException("Problem s citanjem datoteka");
+               throw new RuntimeException(exception.getMessage());
           }
      }
      public abstract DataReader createDataReader();

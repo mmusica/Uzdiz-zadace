@@ -12,9 +12,18 @@ import java.util.regex.Pattern;
 
 public class TerminalCommandHandler {
     private static final TerminalCommandHandler INSTANCE;
-    private static final String REGEX_STRING = "--vs\\s+'(?<vs>\\d{2}\\.\\d{2}\\.\\d{4}\\. \\d{2}:\\d{2}:\\d{2})'|" +
-            "--ms\\s+(?<ms>\\d+)|--pr\\s+'(?<pr>\\d{2}:\\d{2})'|--kr\\s+'(?<kr>\\d{2}:\\d{2})'|--mt\\s+" +
-            "(?<mt>\\d+)|--vi\\s+(?<vi>\\d+)|--pp\\s+(?<pp>[^\\s]+)|--pv\\s+(?<pv>[^\\s]+)|--vp\\s+(?<vp>[^\\s]+)";
+    //    private static final String REGEX_STRING = "--vs\\s+'(?<vs>\\d{2}\\.\\d{2}\\.\\d{4}\\. \\d{2}:\\d{2}:\\d{2})'|" +
+//            "--ms\\s+(?<ms>\\d+)|--pr\\s+'(?<pr>\\d{2}:\\d{2})'|--kr\\s+'(?<kr>\\d{2}:\\d{2})'|--mt\\s+" +
+//            "(?<mt>\\d+)|--vi\\s+(?<vi>\\d+)|--pp\\s+(?<pp>[^\\s]+)|--pv\\s+(?<pv>[^\\s]+)|--vp\\s+(?<vp>[^\\s]+)";
+    private static final String REGEX_STRING = "--vs\\s*'?(?<vs>\\d{2}\\.\\d{2}\\.\\d{4}\\.\\s?\\d{2}:\\d{2}:\\d{2})'?" +
+            "|--ms\\s+(?<ms>\\d+)|--pr\\s*'?(?<pr>\\d{2}:\\d{2})'?" +
+            "|--kr\\s*'?(?<kr>\\d{2}:\\d{2})'?" +
+            "|--mt\\s+(?<mt>\\d+)|--vi\\s+(?<vi>\\d+)|--pp\\s*'?(?<pp>[^\\s]+)'?" +
+            "|--pv\\s*'?(?<pv>[^\\s]+)'?|--vp\\s+(?<vp>[^\\s]+)";
+
+
+
+
     private static final String BAD_REGEX_STRING = "(--ms \\d+\\.|--ms \\d+\\,)|(--mt \\d+\\.|--mt \\d+\\,)|(--vi \\d+\\.|--vi \\d+\\,)";
 
     private String vrstaPaketaDokument;
@@ -41,10 +50,11 @@ public class TerminalCommandHandler {
     private TerminalCommandHandler() {
     }
 
-    public String getCroDateString(){
+    public String getCroDateString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return INSTANCE.getVirtualniSat().format(formatter);
     }
+
     public static TerminalCommandHandler getInstance() {
         return INSTANCE;
     }
