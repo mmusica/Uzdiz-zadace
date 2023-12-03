@@ -2,32 +2,64 @@ package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.enums.TypeOfPackage;
 import org.foi.uzdiz.mmusica.enums.TypeOfService;
+import org.foi.uzdiz.mmusica.observer.Observer;
+import org.foi.uzdiz.mmusica.observer.Subject;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class Paket {
-    //Oznaka;Vrijeme prijema;Pošiljatelj;Primatelj;Vrsta paketa;Visina;Širina;Dužina;Težina;Usluga dostave;Iznos pouzeća
-    String oznaka;
-    LocalDateTime vrijemePrijema;
-    String posiljatelj;
-    String primatelj;
-    PackageType vrstaPaketa;
-    double visina;
-    double sirina;
-    double duzina;
-    double tezina;
-    String uslugaDostave;
-    BigDecimal iznosPouzeca;
-    String statusIsporuke;
-    LocalDateTime vrijemePreuzimanja;
-    boolean isReceived;
-    boolean isBeingDelivered;
-    boolean isDelivered;
+public class Paket implements Subject {
+    private List<Observer> observerList = new ArrayList<>();
+    private String oznaka;
+    private LocalDateTime vrijemePrijema;
+    private  String posiljatelj;
+    private String primatelj;
+    private PackageType vrstaPaketa;
+    private double visina;
+    private double sirina;
+    private double duzina;
+    private double tezina;
+    private String uslugaDostave;
+    private BigDecimal iznosPouzeca;
+    private String statusIsporuke;
+    private LocalDateTime vrijemePreuzimanja;
+    private boolean isReceived;
+    private boolean isBeingDelivered;
+    private boolean isDelivered;
 
     public Paket() {
+    }
+    @Override
+    public void registerObserver(Observer observer) {
+        this.observerList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        this.observerList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        observerList.forEach(observer -> observer.update(this));
+    }
+    public void setStatusIsporuke(String statusIsporuke) {
+        this.statusIsporuke = statusIsporuke;
+        this.notifyObservers();
+    }
+
+    @Override
+    public String getStatus() {
+        return this.oznaka + ": " + this.statusIsporuke;
+    }
+
+    @Override
+    public String setStatus() {
+        return null;
     }
 
     public BigDecimal calculatePrice(){
@@ -155,9 +187,6 @@ public class Paket {
         return statusIsporuke;
     }
 
-    public void setStatusIsporuke(String statusIsporuke) {
-        this.statusIsporuke = statusIsporuke;
-    }
 
     public LocalDateTime getVrijemePreuzimanja() {
         return vrijemePreuzimanja;
@@ -191,6 +220,14 @@ public class Paket {
         isDelivered = delivered;
     }
 
+    public List<Observer> getObserverList() {
+        return observerList;
+    }
+
+    public void setObserverList(List<Observer> observerList) {
+        this.observerList = observerList;
+    }
+
     @Override
     public String toString() {
         return "Paket{" +
@@ -204,4 +241,6 @@ public class Paket {
                 ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
                 '}';
     }
+
+
 }

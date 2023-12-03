@@ -17,7 +17,10 @@ public class VehicleDataReader extends DataReader {
     private static final int KAPACITET_TEZINE = 2;
     private static final int KAPACITET_PROSTORA = 3;
     private static final int REDOSLIJED = 4;
-    private static final int NUMBER_OF_ARGS = 5;
+    private static final int PROSJECNA_BRZINA = 5;
+    private static final int PODRUCJA_PO_RANGU = 6;
+    private static final int STATUS = 7;
+    private static final int NUMBER_OF_ARGS = 8;
 
     private final Repository<Vehicle> vehicleRepository = RepositoryManager.getINSTANCE().getVehicleRepository();
 
@@ -44,10 +47,12 @@ public class VehicleDataReader extends DataReader {
             TerminalCommandHandler.getInstance().handleError(a, "Neispravan broj argumenata u redu %d".formatted(counter));
             return null;
         }
+        String[] rangovi = a[PODRUCJA_PO_RANGU].split(",");
         return new Vehicle(a[REGISTRACIJA], a[OPIS],
                 Double.parseDouble(a[KAPACITET_TEZINE].replace(',', '.')),
                 Double.parseDouble(a[KAPACITET_PROSTORA].replace(',', '.')),
-                Integer.parseInt(a[REDOSLIJED].replace(',', '.')),new BigDecimal(0), new ArrayList<>());
+                Integer.parseInt(a[REDOSLIJED].replace(',', '.')),new BigDecimal(0), new ArrayList<>(),
+                Float.parseFloat(a[PROSJECNA_BRZINA]),rangovi,a[STATUS]);
     }
 
 }

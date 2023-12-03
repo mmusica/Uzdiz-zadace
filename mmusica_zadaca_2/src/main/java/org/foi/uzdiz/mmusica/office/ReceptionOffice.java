@@ -60,8 +60,13 @@ public class ReceptionOffice {
             Logger.getGlobal().log(Level.INFO, "Vrijeme rada tvrtke je gotovo, vracam se na kraj radnog vremena, zavrsavam dan...");
             int hour = TerminalCommandHandler.getInstance().getPocetakRada().getHour();
             int minute = TerminalCommandHandler.getInstance().getPocetakRada().getMinute();
-            LocalDateTime newWorkDay = TerminalCommandHandler.getInstance().getVirtualniSat().plusDays(1).withHour(hour).withMinute(minute);
-            TerminalCommandHandler.getInstance().setVirtualniSat(newWorkDay);
+            if(TerminalCommandHandler.getInstance().getVirtualniSat().toLocalTime().isBefore(TerminalCommandHandler.getInstance().getPocetakRada())){
+                LocalDateTime newWorkDay = TerminalCommandHandler.getInstance().getVirtualniSat().withHour(hour).withMinute(minute);
+                TerminalCommandHandler.getInstance().setVirtualniSat(newWorkDay);
+            }else{
+                LocalDateTime newWorkDay = TerminalCommandHandler.getInstance().getVirtualniSat().plusDays(1).withHour(hour).withMinute(minute);
+                TerminalCommandHandler.getInstance().setVirtualniSat(newWorkDay);
+            }
             return true;
         }
         if (isIncrementedTime(timeToIncrement, originalTime)) {

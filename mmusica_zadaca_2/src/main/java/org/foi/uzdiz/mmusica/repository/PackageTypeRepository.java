@@ -26,4 +26,5 @@ public class PackageTypeRepository implements Repository<PackageType> {
     public List<PackageType> getAll() {
         return packageTypes;
     }
+
 }

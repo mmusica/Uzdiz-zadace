@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -39,6 +40,7 @@ public class TerminalCommandHandler {
     private static final String COMMAND_FORMAT_ERROR_MSG = "Komanda nije dobrog formata";
     private boolean[] validCommand = new boolean[9];
     private int errorCount = 0;
+    private Properties newProperties = new Properties();
 
     static {
         INSTANCE = new TerminalCommandHandler();
@@ -233,5 +235,13 @@ public class TerminalCommandHandler {
 
     public void setErrorCount(int errorCount) {
         this.errorCount = errorCount;
+    }
+
+    public Properties getNewProperties() {
+        return newProperties;
+    }
+
+    public void setNewProperties(Properties newProperties) {
+        this.newProperties = newProperties;
     }
 }

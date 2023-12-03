@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vehicle {
@@ -10,6 +11,9 @@ public class Vehicle {
     private double kapacitetTezine;
     private double kapacitetProstora;
     private int redoslijed;
+    private float prosjecnaBrzina;
+    private String[] podrucjaPoRangu;
+    private String status;
     private BigDecimal money;
     private List<Paket> packages;
     private boolean isDriving;
@@ -18,7 +22,8 @@ public class Vehicle {
     private double getCurrentlyLoadedCapacity;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
-                   double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages) {
+                   double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
+                   float prosjecnaBrzina, String[] podrucjaPoRangu, String status) {
         this.registracija = registracija;
         this.opis = opis;
         this.kapacitetTezine = kapacitetTezine;
@@ -28,6 +33,9 @@ public class Vehicle {
         this.packages = packages;
         this.getCurrentlyLoadedCapacity = 0;
         this.currentlyLoadedWeight = 0;
+        this.prosjecnaBrzina = prosjecnaBrzina;
+        this.podrucjaPoRangu = podrucjaPoRangu;
+        this.status = status;
     }
 
     public BigDecimal getMoney() {
@@ -115,5 +123,29 @@ public class Vehicle {
 
     public void setGetCurrentlyLoadedCapacity(double getCurrentlyLoadedCapacity) {
         this.getCurrentlyLoadedCapacity = getCurrentlyLoadedCapacity;
+    }
+
+    public float getProsjecnaBrzina() {
+        return prosjecnaBrzina;
+    }
+
+    public void setProsjecnaBrzina(float prosjecnaBrzina) {
+        this.prosjecnaBrzina = prosjecnaBrzina;
+    }
+
+    public String[] getPodrucjaPoRangu() {
+        return podrucjaPoRangu;
+    }
+
+    public void setPodrucjaPoRangu(String[] podrucjaPoRangu) {
+        this.podrucjaPoRangu = podrucjaPoRangu;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
