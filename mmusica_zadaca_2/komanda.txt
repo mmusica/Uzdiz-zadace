@@ -1,0 +1,1 @@
+java -jar /home/mmusica/IdeaProjects/mmusica_zadaca_1/target/mmusica_zadaca_2-1.0.jar --vp DZ_1_vrste.csv --pv DZ_1_vozila.csv --pp DZ_1_paketi.csv  --mt 100 --vi 10 --vs \'20.10.2023. 08:00:00\' --ms 600 --pr \'07:00\' --kr \'19:00\'
