@@ -1,14 +1,6 @@
 package org.foi.uzdiz.mmusica;
 
-import org.foi.uzdiz.mmusica.data_extractor.DataExtractor;
-import org.foi.uzdiz.mmusica.data_extractor.PackageDataExtractor;
-import org.foi.uzdiz.mmusica.data_extractor.PackageTypeDataExtractor;
-import org.foi.uzdiz.mmusica.data_extractor.VehicleDataExtractor;
-import org.foi.uzdiz.mmusica.model.locations.Location;
-import org.foi.uzdiz.mmusica.model.locations.factory.AreaSaver;
-import org.foi.uzdiz.mmusica.model.locations.factory.LocationSaver;
-import org.foi.uzdiz.mmusica.model.locations.factory.PlaceSaver;
-import org.foi.uzdiz.mmusica.model.locations.factory.StreetSaver;
+import org.foi.uzdiz.mmusica.model.factory.*;
 import org.foi.uzdiz.mmusica.parameter_handler.ParameterHandler;
 import org.foi.uzdiz.mmusica.parameter_handler.ParameterLoader;
 import org.foi.uzdiz.mmusica.repository.Repository;
@@ -32,14 +24,17 @@ public class Klijent {
 
         Properties newProperties = TerminalCommandHandler.getInstance().getNewProperties();
 
-        initializeData(new PackageTypeDataExtractor());
-        initializeData(new PackageDataExtractor());
-        initializeData(new VehicleDataExtractor());
+        initializeData(new PackageTypeSaver(), RepositoryManager.getINSTANCE().getPackageTypeRepository());
+        initializeData(new PackageSaver(), RepositoryManager.getINSTANCE().getPackageRepository());
+        initializeData(new VehicleSaver(), RepositoryManager.getINSTANCE().getVehicleRepository());
 
-        initializeLocations(new StreetSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
-        initializeLocations(new PlaceSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
-        initializeLocations(new AreaSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
+        initializeData(new StreetSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
+        initializeData(new PlaceSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
+        initializeData(new AreaSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
 
+        var lol = RepositoryManager.getINSTANCE().getAreasRepository();
+        var lol2 = RepositoryManager.getINSTANCE().getVehicleRepository();
+        var lol3 = RepositoryManager.getINSTANCE().getPackageRepository();
         askForUserInput(new UserCommandHandler());
     }
 
@@ -61,11 +56,7 @@ public class Klijent {
         }
         return stringBuilder.toString().trim();
     }
-    public static void initializeData(DataExtractor dataExtractor){
-        dataExtractor.extractData();
-    }
-
-    public static void initializeLocations(LocationSaver locationSaver, Repository<Location> locationRepository){
-        locationSaver.repositorySave(locationRepository);
+    public static <T> void initializeData(DataSaver<T> dataSaver, Repository<T> locationRepository){
+        dataSaver.repositorySave(locationRepository);
     }
 }

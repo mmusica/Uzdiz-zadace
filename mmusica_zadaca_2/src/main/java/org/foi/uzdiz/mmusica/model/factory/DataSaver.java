@@ -1,4 +1,6 @@
-package org.foi.uzdiz.mmusica.data_reader;
+package org.foi.uzdiz.mmusica.model.factory;
+
+import org.foi.uzdiz.mmusica.repository.Repository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,16 +11,12 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DataReader {
-
-    private static final String OZNAKA = "OZNAKA";
-    private static final String REGISTRACIJA = "REGISTRACIJA";
+public abstract class DataSaver<T> {
     public List<String[]> readDataFromFile(String fileName){
         List<String[]> listOfAttributes = new ArrayList<>();
         Path pathToFile = Paths.get(fileName);
         try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8)) {
             String instructionLine = br.readLine();
-            if(!isInstructionInFirstLine(instructionLine)) throw new RuntimeException("Nema prvi informativni redak");
             String line = br.readLine();
             while (line != null) {
                 String[] attributes = line.split(";");
@@ -30,11 +28,8 @@ public abstract class DataReader {
         }
         return listOfAttributes;
     }
-
-    private boolean isInstructionInFirstLine(String instructionLine) {
-        String[] attributes = instructionLine.split(";");
-        return attributes[0].equalsIgnoreCase(OZNAKA) || attributes[0].equalsIgnoreCase(REGISTRACIJA);
+    public void repositorySave(Repository<T> repository){
+        repository.saveAll(this.createDataList());
     }
-
-    public abstract void saveData();
+    public abstract List<T> createDataList();
 }

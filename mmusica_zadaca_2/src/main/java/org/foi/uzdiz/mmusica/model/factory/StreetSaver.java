@@ -1,4 +1,4 @@
-package org.foi.uzdiz.mmusica.model.locations.factory;
+package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.model.locations.Street;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StreetSaver extends LocationSaver {
+public class StreetSaver extends DataSaver<Location> {
     private static final int NUMBER_OF_ARGS = 7;
     private static final int ID = 0;
     private static final int NAZIV = 1;
@@ -19,7 +19,7 @@ public class StreetSaver extends LocationSaver {
     private static final int NAJVECI_KUCNI_BROJ = 6;
 
     @Override
-    public List<Location> getListOfLocations() {
+    public List<Location> createDataList() {
         List<String[]> allAttributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getNewProperties().getProperty("pu"));
         final int[] counter = {2};
         List<Location> streets = new ArrayList<>();

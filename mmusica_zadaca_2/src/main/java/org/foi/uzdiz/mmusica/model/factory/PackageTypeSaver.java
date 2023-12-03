@@ -1,17 +1,15 @@
-package org.foi.uzdiz.mmusica.data_reader;
+package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
-import org.foi.uzdiz.mmusica.repository.PackageTypeRepository;
-import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.model.factory.DataSaver;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PackageTypeDataReader extends DataReader {
-    private final Repository<PackageType> packageTypeRepository = RepositoryManager.getINSTANCE().getPackageTypeRepository();
+public class PackageTypeSaver extends DataSaver<PackageType> {
     private static final int OZNAKA = 0;
     private static final int OPIS = 1;
     private static final int VISINA = 2;
@@ -24,24 +22,24 @@ public class PackageTypeDataReader extends DataReader {
     private static final int CIJENA_T = 9;
     private static final int NUMBER_OF_ARGS = 10;
 
-
     @Override
-    public void saveData() {
+    public List<PackageType> createDataList() {
         List<String[]> attributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getVrstaPaketaDokument());
+        List<PackageType> packageTypes = new ArrayList<>();
         final int[] counter = {2};
         attributes.forEach(a -> {
             try {
                 PackageType packageType = createPackageType(a, counter[0]);
                 if (packageType != null) {
-                    packageTypeRepository.save(packageType);
+                    packageTypes.add(packageType);
                 }
                 counter[0]++;
             } catch (Exception e) {
                 TerminalCommandHandler.getInstance().handleError(a, "Tip Paketa: tekst umjesto broja");
             }
         });
+        return packageTypes;
     }
-
     private PackageType createPackageType(String[] a, int counter) {
         PackageType packageType = null;
         if (Arrays.stream(a).count() != NUMBER_OF_ARGS) {

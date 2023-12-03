@@ -1,34 +1,32 @@
-package org.foi.uzdiz.mmusica.data_reader;
+package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.builder.PackageBuildDirector;
 import org.foi.uzdiz.mmusica.builder.PackageBuilderImpl;
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
-import org.foi.uzdiz.mmusica.repository.PackageRepository;
-import org.foi.uzdiz.mmusica.repository.PackageTypeRepository;
+import org.foi.uzdiz.mmusica.model.factory.DataSaver;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PackageDataReader extends DataReader {
-    private static final int OZNAKA = 0;
+public class PackageSaver extends DataSaver<Paket> {
     private static final int VRSTA_PAKETA = 4;
     private static final int NUMBER_OF_ARGS = 11;
-    private final Repository<Paket> paketRepository = RepositoryManager.getINSTANCE().getPackageRepository();
 
     @Override
-    public void saveData() throws RuntimeException {
+    public List<Paket> createDataList() {
         List<String[]> attributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getPrijemPaketaDokument());
         final int[] counter = {2};
-
+        List<Paket> pakets = new ArrayList<>();
         attributes.forEach(a -> {
             try {
                 Paket paket = createPackage(a, counter[0]);
                 if (paket != null) {
-                    paketRepository.save(paket);
+                    pakets.add(paket);
                 }
                 counter[0]++;
 
@@ -36,6 +34,10 @@ public class PackageDataReader extends DataReader {
                 TerminalCommandHandler.getInstance().handleError(a, "Paket: tekst umjesto broja");
             }
         });
+        return pakets;
+    }
+    public void saveData() throws RuntimeException {
+
     }
 
 
@@ -65,4 +67,5 @@ public class PackageDataReader extends DataReader {
         }
         return false;
     }
+
 }

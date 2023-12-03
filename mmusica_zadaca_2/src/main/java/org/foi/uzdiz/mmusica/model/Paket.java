@@ -228,19 +228,19 @@ public class Paket implements Subject {
         this.observerList = observerList;
     }
 
-    @Override
-    public String toString() {
-        return "Paket{" +
-                "oznaka='" + oznaka + '\'' +
-                ", vrijemePrijema=" + getCroatianDate(vrijemePrijema) +
-                ", vrstaPaketa=" + vrstaPaketa.getOznaka() +
-                ", vrsta usluge=" + uslugaDostave +
-                ", iznosPouzeca=" + calculatePrice() +
-                ", iznosDostave=" + getVehiclePrice() +
-                ", statusIsporuke='" + statusIsporuke + '\'' + '\n' +
-                ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Paket{" +
+//                "oznaka='" + oznaka + '\'' +
+//                ", vrijemePrijema=" + getCroatianDate(vrijemePrijema) +
+//                ", vrstaPaketa=" + vrstaPaketa.getOznaka() +
+//                ", vrsta usluge=" + uslugaDostave +
+//                ", iznosPouzeca=" + calculatePrice() +
+//                ", iznosDostave=" + getVehiclePrice() +
+//                ", statusIsporuke='" + statusIsporuke + '\'' + '\n' +
+//                ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
+//                '}';
+//    }
 
 
 }

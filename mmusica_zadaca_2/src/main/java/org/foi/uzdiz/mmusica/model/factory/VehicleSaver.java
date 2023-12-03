@@ -1,9 +1,9 @@
-package org.foi.uzdiz.mmusica.data_reader;
+package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.Vehicle;
+import org.foi.uzdiz.mmusica.model.factory.DataSaver;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.RepositoryManager;
-import org.foi.uzdiz.mmusica.repository.VehicleRepository;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.math.BigDecimal;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VehicleDataReader extends DataReader {
+public class VehicleSaver extends DataSaver<Vehicle> {
     private static final int REGISTRACIJA = 0;
     private static final int OPIS = 1;
     private static final int KAPACITET_TEZINE = 2;
@@ -22,24 +22,24 @@ public class VehicleDataReader extends DataReader {
     private static final int STATUS = 7;
     private static final int NUMBER_OF_ARGS = 8;
 
-    private final Repository<Vehicle> vehicleRepository = RepositoryManager.getINSTANCE().getVehicleRepository();
-
 
     @Override
-    public void saveData() {
+    public List<Vehicle> createDataList() {
         List<String[]> attributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getPopisVozilaDokument());
+        List<Vehicle> vehicles = new ArrayList<>();
         final int[] counter = {2};
         attributes.forEach(a -> {
             try {
                 Vehicle vehicle = createVehicle(a, counter[0]);
                 if (vehicle != null) {
-                    vehicleRepository.save(vehicle);
+                    vehicles.add(vehicle);
                 }
             } catch (Exception e) {
                 TerminalCommandHandler.getInstance().handleError(a,"Vozila: tekst umjesto broja");
             }
             counter[0]++;
         });
+        return vehicles;
     }
 
     private Vehicle createVehicle(String[] a, int counter) {
