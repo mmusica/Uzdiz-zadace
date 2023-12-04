@@ -2,8 +2,7 @@ package org.foi.uzdiz.mmusica.utils;
 
 import org.foi.uzdiz.mmusica.model.Paket;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
-import org.foi.uzdiz.mmusica.repository.PackageRepository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.util.List;
 

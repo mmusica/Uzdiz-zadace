@@ -4,7 +4,7 @@ import org.foi.uzdiz.mmusica.model.factory.*;
 import org.foi.uzdiz.mmusica.parameter_handler.ParameterHandler;
 import org.foi.uzdiz.mmusica.parameter_handler.ParameterLoader;
 import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 import org.foi.uzdiz.mmusica.utils.UserCommandHandler;
 
@@ -25,16 +25,23 @@ public class Klijent {
         Properties newProperties = TerminalCommandHandler.getInstance().getNewProperties();
 
         initializeData(new PackageTypeSaver(), RepositoryManager.getINSTANCE().getPackageTypeRepository());
+
+        //Paket mora imati packageType
         initializeData(new PackageSaver(), RepositoryManager.getINSTANCE().getPackageRepository());
         initializeData(new VehicleSaver(), RepositoryManager.getINSTANCE().getVehicleRepository());
+
 
         initializeData(new StreetSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
         initializeData(new PlaceSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
         initializeData(new AreaSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
 
+        //Osoba mora imat lokacije
+        initializeData(new PersonSaver(), RepositoryManager.getINSTANCE().getPersonRepository());
+
         var lol = RepositoryManager.getINSTANCE().getAreasRepository();
         var lol2 = RepositoryManager.getINSTANCE().getVehicleRepository();
         var lol3 = RepositoryManager.getINSTANCE().getPackageRepository();
+        var lol4 = RepositoryManager.getINSTANCE().getPersonRepository();
         askForUserInput(new UserCommandHandler());
     }
 

@@ -4,9 +4,8 @@ import org.foi.uzdiz.mmusica.builder.PackageBuildDirector;
 import org.foi.uzdiz.mmusica.builder.PackageBuilderImpl;
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
-import org.foi.uzdiz.mmusica.model.factory.DataSaver;
 import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.util.ArrayList;

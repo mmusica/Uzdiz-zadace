@@ -2,9 +2,8 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
-import org.foi.uzdiz.mmusica.repository.PackageTypeRepository;
 import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

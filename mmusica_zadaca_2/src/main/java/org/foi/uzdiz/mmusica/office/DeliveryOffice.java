@@ -5,8 +5,7 @@ import org.foi.uzdiz.mmusica.enums.TypeOfService;
 import org.foi.uzdiz.mmusica.model.Paket;
 import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
-import org.foi.uzdiz.mmusica.repository.VehicleRepository;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.time.LocalDateTime;
@@ -15,8 +14,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DeliveryOffice {
     public final Deque<Vehicle> vehicles = new ArrayDeque<>();

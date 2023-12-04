@@ -1,9 +1,6 @@
 package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.Vehicle;
-import org.foi.uzdiz.mmusica.model.factory.DataSaver;
-import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.math.BigDecimal;

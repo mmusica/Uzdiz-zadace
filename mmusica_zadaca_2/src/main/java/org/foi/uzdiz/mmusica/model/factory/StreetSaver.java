@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StreetSaver extends DataSaver<Location> {
+    private static final String FILENAME = "pu";
     private static final int NUMBER_OF_ARGS = 7;
     private static final int ID = 0;
     private static final int NAZIV = 1;
@@ -20,7 +21,7 @@ public class StreetSaver extends DataSaver<Location> {
 
     @Override
     public List<Location> createDataList() {
-        List<String[]> allAttributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getNewProperties().getProperty("pu"));
+        List<String[]> allAttributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getNewProperties().getProperty(FILENAME));
         final int[] counter = {2};
         List<Location> streets = new ArrayList<>();
         allAttributes.forEach(a -> {

@@ -3,7 +3,7 @@ package org.foi.uzdiz.mmusica.model.factory;
 import org.foi.uzdiz.mmusica.model.locations.Area;
 import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.repository.Repository;
-import org.foi.uzdiz.mmusica.repository.RepositoryManager;
+import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.util.ArrayList;
@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AreaSaver extends DataSaver<Location> {
+    private static final String FILENAME = "pmu";
     private static final int NUMBER_OF_ARGS = 2;
     private static final int ID = 0;
     private static final int GRADOVI_ULICE = 1;
@@ -21,7 +22,7 @@ public class AreaSaver extends DataSaver<Location> {
 
     @Override
     public List<Location> createDataList() {
-        List<String[]> allAttributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getNewProperties().getProperty("pmu"));
+        List<String[]> allAttributes = this.readDataFromFile(TerminalCommandHandler.getInstance().getNewProperties().getProperty(FILENAME));
         final int[] counter = {2};
         List<Location> areas = new ArrayList<>();
         allAttributes.forEach(a -> {
