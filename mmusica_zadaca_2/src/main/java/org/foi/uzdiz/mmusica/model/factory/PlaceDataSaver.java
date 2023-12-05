@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PlaceSaver extends DataSaver<Location> {
+public class PlaceDataSaver extends DataSaver<Location> {
     private static final String FILENAME = "pm";
     private static final int NUMBER_OF_ARGS = 3;
     private static final int ID = 0;

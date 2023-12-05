@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AreaSaver extends DataSaver<Location> {
+public class AreaDataSaver extends DataSaver<Location> {
     private static final String FILENAME = "pmu";
     private static final int NUMBER_OF_ARGS = 2;
     private static final int ID = 0;

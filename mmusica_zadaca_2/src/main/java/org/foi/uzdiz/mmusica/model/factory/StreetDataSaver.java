@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StreetSaver extends DataSaver<Location> {
+public class StreetDataSaver extends DataSaver<Location> {
     private static final String FILENAME = "pu";
     private static final int NUMBER_OF_ARGS = 7;
     private static final int ID = 0;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VehicleSaver extends DataSaver<Vehicle> {
+public class VehicleDataSaver extends DataSaver<Vehicle> {
     private static final int REGISTRACIJA = 0;
     private static final int OPIS = 1;
     private static final int KAPACITET_TEZINE = 2;

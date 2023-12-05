@@ -1,7 +1,6 @@
 package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
-import org.foi.uzdiz.mmusica.model.factory.DataSaver;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.math.BigDecimal;
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PackageTypeSaver extends DataSaver<PackageType> {
+public class PackageTypeDataSaver extends DataSaver<PackageType> {
     private static final int OZNAKA = 0;
     private static final int OPIS = 1;
     private static final int VISINA = 2;

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PersonSaver extends DataSaver<Person> {
+public class PersonDataSaver extends DataSaver<Person> {
     private static final String FILENAME = "po";
     private static final int NUMBER_OF_ARGS = 4;
     private static final int NAZIV = 0;

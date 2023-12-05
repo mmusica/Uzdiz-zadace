@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PackageSaver extends DataSaver<Paket> {
+public class PackageDataSaver extends DataSaver<Paket> {
     private static final int VRSTA_PAKETA = 4;
     private static final int NUMBER_OF_ARGS = 11;
 
