@@ -10,35 +10,36 @@ import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import java.util.Properties;
 
 public class DataFacadeImpl implements DataFacade {
-
     private final RepositoryManager repositoryManager = RepositoryManager.getINSTANCE();
 
     public DataFacadeImpl() {
     }
-
     @Override
-    public void initializeData() {
-
-        setRepoData(new StreetDataSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
-        setRepoData(new PlaceDataSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
-        setRepoData(new AreaDataSaver(), RepositoryManager.getINSTANCE().getAreasRepository());
-
-        //Osoba mora imat lokacije
-        setRepoData(new PersonDataSaver(), RepositoryManager.getINSTANCE().getPersonRepository());
-        setRepoData(new PackageTypeDataSaver(), RepositoryManager.getINSTANCE().getPackageTypeRepository());
-        //Paket mora imati packageType
-        setRepoData(new PackageDataSaver(), RepositoryManager.getINSTANCE().getPackageRepository());
-        setRepoData(new VehicleDataSaver(), RepositoryManager.getINSTANCE().getVehicleRepository());
+    public void initializeDataWithCommand(String command) {
+        this.initializeCommandDataParameters(command);
+        this.initializeData();
     }
 
-    @Override
-    public void initializeCommandData(String command) {
+    private void initializeCommandDataParameters(String command) {
         ParameterLoader parameterLoader = new ParameterLoader();
         Properties properties = parameterLoader.loadProperties(command);
         ParameterHandler parameterHandler = new ParameterHandler();
         parameterHandler.handleProperties(properties);
     }
 
+    public void initializeData() {
+
+        setRepoData(new StreetDataSaver(), repositoryManager.getStreetRepository());
+        setRepoData(new PlaceDataSaver(), repositoryManager.getPlacesRepository());
+        setRepoData(new AreaDataSaver(), repositoryManager.getAreasRepository());
+
+        //Osoba mora imat lokacije
+        setRepoData(new PersonDataSaver(), repositoryManager.getPersonRepository());
+        setRepoData(new PackageTypeDataSaver(), repositoryManager.getPackageTypeRepository());
+        //Paket mora imati packageType
+        setRepoData(new PackageDataSaver(), repositoryManager.getPackageRepository());
+        setRepoData(new VehicleDataSaver(), repositoryManager.getVehicleRepository());
+    }
     public static <T> void setRepoData(DataSaver<T> dataSaver, Repository<T> locationRepository) {
         dataSaver.repositorySave(locationRepository);
     }

@@ -1,6 +1,5 @@
 package org.foi.uzdiz.mmusica.facade;
 
 public interface DataFacade {
-    void initializeData();
-    void initializeCommandData(String command);
+    void initializeDataWithCommand(String command);
 }

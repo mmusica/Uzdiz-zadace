@@ -14,8 +14,7 @@ public class Klijent {
         String command = getCommand(args);
 
         DataFacade dataFacade = new DataFacadeImpl();
-        dataFacade.initializeCommandData(command);
-        dataFacade.initializeData();
+        dataFacade.initializeDataWithCommand(command);
 
         var lol = RepositoryManager.getINSTANCE().getAreasRepository();
         var lol2 = RepositoryManager.getINSTANCE().getVehicleRepository();
