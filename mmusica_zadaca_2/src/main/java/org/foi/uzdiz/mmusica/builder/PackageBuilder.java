@@ -2,9 +2,11 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.observer.Observer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PackageBuilder {
     Paket build();
@@ -40,4 +42,6 @@ public interface PackageBuilder {
     PackageBuilder isDelivered(boolean isDelivered);
 
     PackageBuilder vrstaPaketa(PackageType packageType);
+    PackageBuilder observerList(List<Observer> observerList);
+
 }

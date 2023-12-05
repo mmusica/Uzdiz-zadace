@@ -21,6 +21,11 @@ public class PackageRepository implements Repository<Paket> {
         return listaPaketi.stream().sorted(Comparator.comparing(Paket::getTimeOfReceival)).toList();
     }
 
+    @Override
+    public <J> Paket find(J id) {
+        return null;
+    }
+
 
     @Override
     public Paket save(Paket item) {

@@ -27,4 +27,9 @@ public class VehicleRepository implements Repository<Vehicle>{
     public List<Vehicle> getAll() {
         return vehiclesList.stream().sorted(Comparator.comparing(Vehicle::getRedoslijed)).toList();
     }
+
+    @Override
+    public <J> Vehicle find(J id) {
+        return null;
+    }
 }

@@ -6,4 +6,5 @@ public interface Repository <T>{
     T save(T item);
     void saveAll (List<T> listOfItems);
     List <T> getAll();
+    <J>T find(J id);
 }

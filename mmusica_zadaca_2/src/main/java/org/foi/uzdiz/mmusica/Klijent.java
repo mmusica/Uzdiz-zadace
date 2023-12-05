@@ -24,12 +24,6 @@ public class Klijent {
 
         Properties newProperties = TerminalCommandHandler.getInstance().getNewProperties();
 
-        initializeData(new PackageTypeSaver(), RepositoryManager.getINSTANCE().getPackageTypeRepository());
-
-        //Paket mora imati packageType
-        initializeData(new PackageSaver(), RepositoryManager.getINSTANCE().getPackageRepository());
-        initializeData(new VehicleSaver(), RepositoryManager.getINSTANCE().getVehicleRepository());
-
 
         initializeData(new StreetSaver(), RepositoryManager.getINSTANCE().getStreetRepository());
         initializeData(new PlaceSaver(), RepositoryManager.getINSTANCE().getPlacesRepository());
@@ -37,6 +31,14 @@ public class Klijent {
 
         //Osoba mora imat lokacije
         initializeData(new PersonSaver(), RepositoryManager.getINSTANCE().getPersonRepository());
+
+        initializeData(new PackageTypeSaver(), RepositoryManager.getINSTANCE().getPackageTypeRepository());
+
+        //Paket mora imati packageType
+        initializeData(new PackageSaver(), RepositoryManager.getINSTANCE().getPackageRepository());
+        initializeData(new VehicleSaver(), RepositoryManager.getINSTANCE().getVehicleRepository());
+
+
 
         var lol = RepositoryManager.getINSTANCE().getAreasRepository();
         var lol2 = RepositoryManager.getINSTANCE().getVehicleRepository();

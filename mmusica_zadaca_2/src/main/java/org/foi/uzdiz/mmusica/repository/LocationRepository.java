@@ -22,4 +22,9 @@ public class LocationRepository implements Repository<Location>{
     public List<Location> getAll() {
         return areas;
     }
+
+    @Override
+    public <J> Location find(J id) {
+        return null;
+    }
 }

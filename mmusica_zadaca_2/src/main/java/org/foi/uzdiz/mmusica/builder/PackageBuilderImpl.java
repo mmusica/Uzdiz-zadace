@@ -2,9 +2,11 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.observer.Observer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class PackageBuilderImpl implements PackageBuilder {
     private Paket paket = new Paket();
@@ -107,6 +109,12 @@ public class PackageBuilderImpl implements PackageBuilder {
     @Override
     public PackageBuilder vrstaPaketa(PackageType packageType) {
         this.paket.setVrstaPaketa(packageType);
+        return this;
+    }
+
+    @Override
+    public PackageBuilder observerList(List<Observer> observerList) {
+        this.paket.getObserverList().addAll(observerList);
         return this;
     }
 }

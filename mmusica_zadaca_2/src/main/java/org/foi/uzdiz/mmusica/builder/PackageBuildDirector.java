@@ -2,15 +2,21 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.Person;
+import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
+import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PackageBuildDirector {
     private final PackageBuilder packageBuilder;
+    private final Repository<Person> personRepository = RepositoryManager.getINSTANCE().getPersonRepository();
     private static final int OZNAKA = 0;
     private static final int VRIJEME_PRIJEMA = 1;
     private static final int POSILJATELJ = 2;
@@ -41,7 +47,22 @@ public class PackageBuildDirector {
                 .isBeingDelivered(false)
                 .isReceived(false)
                 .isDelivered(false)
+                .observerList(getObserverList(a))
                 .build();
+    }
+
+    private List<Observer> getObserverList(String[] a) {
+        Observer primatelj = personRepository.find(a[PRIMATELJ]);
+        Observer posiljatelj = personRepository.find(a[POSILJATELJ]);
+        List<Observer> observerList = new ArrayList<>();
+        if(primatelj == null){ TerminalCommandHandler.getInstance().handleError(a,"Ovakav primatelj ne postoji %s".formatted(a[PRIMATELJ]));}
+        else if(posiljatelj == null) TerminalCommandHandler.getInstance().handleError(a,"Ovakav posiljatelj ne postoji %s".formatted(a[POSILJATELJ]));
+        else{
+            observerList = new ArrayList<>();
+            observerList.add(posiljatelj);
+            observerList.add(primatelj);
+        }
+        return observerList;
     }
 
     private LocalDateTime getVrijemePrijema(String s) {

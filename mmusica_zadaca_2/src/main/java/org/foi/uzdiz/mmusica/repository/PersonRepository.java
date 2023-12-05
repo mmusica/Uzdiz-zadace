@@ -23,4 +23,11 @@ public class PersonRepository implements Repository<Person> {
     public List<Person> getAll() {
         return personList;
     }
+
+    @Override
+    public <J> Person find(J id) {
+        List<Person> list = personList.stream().filter(person -> person.getName().equals(id)).toList();
+        if(list.isEmpty() || (long) list.size() >1) return null;
+        else return list.get(0);
+    }
 }

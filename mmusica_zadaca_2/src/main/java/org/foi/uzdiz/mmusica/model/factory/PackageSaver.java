@@ -30,7 +30,7 @@ public class PackageSaver extends DataSaver<Paket> {
                 counter[0]++;
 
             } catch (Exception e) {
-                TerminalCommandHandler.getInstance().handleError(a, "Paket: tekst umjesto broja");
+                TerminalCommandHandler.getInstance().handleError(a, e.getMessage());
             }
         });
         return pakets;

@@ -137,10 +137,13 @@ public class DeliveryOffice {
                 paket.setDelivered(true);
                 vehicle.setMoney(vehicle.getMoney().add(paket.getVehiclePrice()));
                 paket.setStatusIsporuke("Dostavljen");
+
             });
             clearVehicleData(vehicle);
             System.out.printf("ZAVRSENA DOSTAVA vozila %s u virtualno vrijeme: %s%n",
                     vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
+
+
         }
     }
 

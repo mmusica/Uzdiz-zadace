@@ -27,4 +27,9 @@ public class PackageTypeRepository implements Repository<PackageType> {
         return packageTypes;
     }
 
+    @Override
+    public <J> PackageType find(J id) {
+        return null;
+    }
+
 }
