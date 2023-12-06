@@ -36,8 +36,8 @@ public class PackageBuildDirector {
         boolean isErrored = (long) observerList.size() !=2;
         return packageBuilder.oznaka(a[OZNAKA])
                 .vrijemePrijema(getVrijemePrijema(a[VRIJEME_PRIJEMA]))
-                .posiljatelj(a[POSILJATELJ])
-                .primatelj(a[PRIMATELJ])
+                .posiljatelj(findPerson(a[POSILJATELJ]))
+                .primatelj(findPerson(a[PRIMATELJ]))
                 .vrstaPaketa(getPackageType(a[VRSTA_PAKETA]))
                 .visina(Double.parseDouble(getValidValue(a[VISINA])))
                 .sirina(Double.parseDouble(getValidValue(a[SIRINA])))
@@ -52,6 +52,10 @@ public class PackageBuildDirector {
                 .observerList(observerList)
                 .isErrored(isErrored)
                 .build();
+    }
+
+    private Person findPerson(String s) {
+       return RepositoryManager.getINSTANCE().getPersonRepository().find(s);
     }
 
     private List<Observer> getObserverList(String[] a) {

@@ -1,8 +1,9 @@
 package org.foi.uzdiz.mmusica.model;
 
+import org.foi.uzdiz.mmusica.model.locations.Location;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Vehicle {
@@ -12,7 +13,8 @@ public class Vehicle {
     private double kapacitetProstora;
     private int redoslijed;
     private float prosjecnaBrzina;
-    private String[] podrucjaPoRangu;
+
+    private List<Location> deliveryArea;
     private String status;
     private BigDecimal money;
     private List<Paket> packages;
@@ -23,7 +25,7 @@ public class Vehicle {
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
-                   float prosjecnaBrzina, String[] podrucjaPoRangu, String status) {
+                   float prosjecnaBrzina, List<Location> deliveryArea, String status) {
         this.registracija = registracija;
         this.opis = opis;
         this.kapacitetTezine = kapacitetTezine;
@@ -34,7 +36,7 @@ public class Vehicle {
         this.getCurrentlyLoadedCapacity = 0;
         this.currentlyLoadedWeight = 0;
         this.prosjecnaBrzina = prosjecnaBrzina;
-        this.podrucjaPoRangu = podrucjaPoRangu;
+        this.deliveryArea = deliveryArea;
         this.status = status;
     }
 
@@ -133,12 +135,12 @@ public class Vehicle {
         this.prosjecnaBrzina = prosjecnaBrzina;
     }
 
-    public String[] getPodrucjaPoRangu() {
-        return podrucjaPoRangu;
+    public List<Location> getDeliveryArea() {
+        return deliveryArea;
     }
 
-    public void setPodrucjaPoRangu(String[] podrucjaPoRangu) {
-        this.podrucjaPoRangu = podrucjaPoRangu;
+    public void setDeliveryArea(List<Location> deliveryArea) {
+        this.deliveryArea = deliveryArea;
     }
 
     public String getStatus() {

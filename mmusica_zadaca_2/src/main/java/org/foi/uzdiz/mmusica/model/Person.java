@@ -1,8 +1,8 @@
 package org.foi.uzdiz.mmusica.model;
 
+import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.observer.Subject;
-import org.foi.uzdiz.mmusica.model.locations.Location;
 
 
 public class Person implements Observer {
@@ -23,6 +23,7 @@ public class Person implements Observer {
         this.kbr = kbr;
     }
 
+    @Override
     public String getName() {
         return name;
     }

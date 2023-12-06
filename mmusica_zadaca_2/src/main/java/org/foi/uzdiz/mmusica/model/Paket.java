@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.enums.TypeOfPackage;
 import org.foi.uzdiz.mmusica.enums.TypeOfService;
+import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.observer.Subject;
 
@@ -16,8 +17,8 @@ public class Paket implements Subject {
     private List<Observer> observerList = new ArrayList<>();
     private String oznaka;
     private LocalDateTime vrijemePrijema;
-    private  String posiljatelj;
-    private String primatelj;
+    private  Person posiljatelj;
+    private Person primatelj;
     private PackageType vrstaPaketa;
     private double visina;
     private double sirina;
@@ -40,6 +41,12 @@ public class Paket implements Subject {
         if(!observerList.contains(observer)) this.observerList.add(observer);
     }
 
+    public Location getPosiljateljLocation(String name){
+        for (Observer observer : this.observerList) {
+
+        }
+        return null;
+    }
     @Override
     public void removeObserver(Observer observer) {
         this.observerList.remove(observer);
@@ -109,19 +116,19 @@ public class Paket implements Subject {
         this.vrijemePrijema = vrijemePrijema;
     }
 
-    public String getPosiljatelj() {
+    public Person getPosiljatelj() {
         return posiljatelj;
     }
 
-    public void setPosiljatelj(String posiljatelj) {
+    public void setPosiljatelj(Person posiljatelj) {
         this.posiljatelj = posiljatelj;
     }
 
-    public String getPrimatelj() {
+    public Person getPrimatelj() {
         return primatelj;
     }
 
-    public void setPrimatelj(String primatelj) {
+    public void setPrimatelj(Person primatelj) {
         this.primatelj = primatelj;
     }
 

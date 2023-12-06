@@ -25,6 +25,8 @@ public class LocationRepository implements Repository<Location>{
 
     @Override
     public <J> Location find(J id) {
-        return null;
+        List<Location> list = areas.stream().filter(area -> area.getId().equals(id)).toList();
+        if(list.isEmpty() || (long) list.size() >1) return null;
+        else return list.get(0);
     }
 }

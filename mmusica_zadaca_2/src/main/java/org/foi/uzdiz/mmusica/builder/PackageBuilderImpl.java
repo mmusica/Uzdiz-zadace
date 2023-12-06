@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.Person;
 import org.foi.uzdiz.mmusica.observer.Observer;
 
 import java.math.BigDecimal;
@@ -23,13 +24,13 @@ public class PackageBuilderImpl implements PackageBuilder {
     }
 
     @Override
-    public PackageBuilder posiljatelj(String posiljatelj) {
+    public PackageBuilder posiljatelj(Person posiljatelj) {
         this.paket.setPosiljatelj(posiljatelj);
         return this;
     }
 
     @Override
-    public PackageBuilder primatelj(String primatelj) {
+    public PackageBuilder primatelj(Person primatelj) {
         this.paket.setPrimatelj(primatelj);
         return this;
     }

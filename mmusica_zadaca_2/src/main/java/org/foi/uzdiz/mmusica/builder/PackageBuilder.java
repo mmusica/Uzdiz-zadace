@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.builder;
 
 import org.foi.uzdiz.mmusica.model.PackageType;
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.Person;
 import org.foi.uzdiz.mmusica.observer.Observer;
 
 import java.math.BigDecimal;
@@ -13,9 +14,9 @@ public interface PackageBuilder {
 
     PackageBuilder oznaka(String oznaka);
 
-    PackageBuilder posiljatelj(String posiljatelj);
+    PackageBuilder posiljatelj(Person posiljatelj);
 
-    PackageBuilder primatelj(String primatelj);
+    PackageBuilder primatelj(Person primatelj);
 
     PackageBuilder vrijemePrijema(LocalDateTime vrijemePrijema);
 
