@@ -1,16 +1,16 @@
 package org.foi.uzdiz.mmusica.model.locations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Place implements Location {
-    private List<Location> locationList = new ArrayList<>();
+    private List<Location> locationList;
     private Long id;
     private String naziv;
 
     @Override
     public void display() {
-
+        System.out.println("\tGrad/Mjesto "+this.id+ " "+this.naziv+".");
+        this.locationList.forEach(Location::display);
     }
 
     public Place(Long id, String naziv, List<Location> locationList) {

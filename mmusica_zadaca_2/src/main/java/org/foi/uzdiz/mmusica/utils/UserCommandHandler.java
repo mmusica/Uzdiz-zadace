@@ -1,24 +1,33 @@
 package org.foi.uzdiz.mmusica.utils;
 
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserCommandHandler {
     private static final String VIRTUALNO_VRIJEME = "VR";
     private static final String ISPIS = "IP";
     private static final String QUIT = "Q";
+    private static final String  PREGLED_PODRUCJA = "PP";
+    private static final String  PROMJENA_OBAVIJESTI = "PO";
     private static final String FAIL_RESPONSE = "Nepoznata naredba";
     private static final String VIRTUALNO_VRIJEME_FAIL_RESPONSE = "VR naredba nije valjana";
     private static final String SUCCESS_RESPONSE = "Naredba uspjesno izvrsena!";
-
     private final ReceptionOffice receptionOffice = new ReceptionOffice();
+    final String regex = "^PO '([A-Za-z ]+)' \\S+ [ND]$";
+    final Pattern pattern = Pattern.compile(regex);
+
 
     public String handleUserCommand(String command) {
         String[] commandArray = command.split(" ");
-        String response = null;
         switch (commandArray[0].toUpperCase()) {
             case VIRTUALNO_VRIJEME: {
                 if (isVirtualnoVrijemeValid(commandArray)) {
@@ -33,6 +42,23 @@ public class UserCommandHandler {
             case QUIT: {
                 break;
             }
+            case PREGLED_PODRUCJA: {
+                displayLocations();
+                break;
+            }
+            case PROMJENA_OBAVIJESTI:{
+                if(isPromjenaObavijestiCommandValid(command)){
+                    Observer observer = RepositoryManager.getINSTANCE().getPersonRepository().find(getPersonName(command));
+                    Paket paket = RepositoryManager.getINSTANCE().getPackageRepository().find(getPackageId(commandArray));
+                    String statusUpdate = getStatusUpdate(commandArray);
+                    if(paket==null || observer==null){
+                        Logger.getGlobal().log(Level.SEVERE, "Paket ili osoba ne postoje");
+                    }else{
+                        updateObserver(statusUpdate, paket, observer);
+                    }
+                }
+                break;
+            }
             default: {
                 return FAIL_RESPONSE;
             }
@@ -40,9 +66,42 @@ public class UserCommandHandler {
         return SUCCESS_RESPONSE;
     }
 
+    private String getStatusUpdate(String[] commandArray) {
+        int statusIndex = commandArray.length-1;
+        return commandArray[statusIndex];
+    }
+
+    private String getPackageId(String[] commandArray) {
+        int packageIndex = commandArray.length-2;
+        return commandArray[packageIndex];
+    }
+
+    private String getPersonName(String command) {
+        final Matcher matcher = pattern.matcher(command);
+        if(matcher.matches()) return matcher.group(1);
+        return null;
+    }
+
+    private void updateObserver(String statusUpdate, Paket paket, Observer observer) {
+        if(statusUpdate.equals("D")){
+            paket.registerObserver(observer);
+        }else{
+            paket.removeObserver(observer);
+        }
+    }
+
+    private boolean isPromjenaObavijestiCommandValid(String command) {
+        final Matcher matcher = pattern.matcher(command);
+        return matcher.matches();
+    }
+
+    private void displayLocations() {
+        RepositoryManager.getINSTANCE().getAreasRepository().getAll().forEach(Location::display);
+    }
+
 
     private void handeIspisCommand() {
-        System.out.println("TRENUTNO VRIJEME: %s".formatted(TerminalCommandHandler.getInstance().getCroDateString()));
+        System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
 
         System.out.println("\nPrimljeni");
         List<Paket> all = RepositoryManager.getINSTANCE().getPackageRepository().getAll();

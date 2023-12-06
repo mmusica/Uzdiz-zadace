@@ -1,12 +1,11 @@
 package org.foi.uzdiz.mmusica.model.locations;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Area implements Location {
 
     Long id;
-    List<Location> locationList = new ArrayList<>();
+    List<Location> locationList;
 
     public Area(Long id, List<Location> locationList) {
         this.id = id;
@@ -16,7 +15,8 @@ public class Area implements Location {
 
     @Override
     public void display() {
-
+        System.out.println("Podrucje "+this.id+".");
+        this.locationList.forEach(Location::display);
     }
 
     @Override

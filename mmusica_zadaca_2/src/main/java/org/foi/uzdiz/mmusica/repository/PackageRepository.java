@@ -23,7 +23,9 @@ public class PackageRepository implements Repository<Paket> {
 
     @Override
     public <J> Paket find(J id) {
-        return null;
+        List<Paket> list = listaPaketi.stream().filter(paket -> paket.getOznaka().equals(id)).toList();
+        if(list.isEmpty() || (long) list.size() >1) return null;
+        else return list.get(0);
     }
 
 

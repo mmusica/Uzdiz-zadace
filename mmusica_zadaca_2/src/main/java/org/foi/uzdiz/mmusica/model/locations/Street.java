@@ -11,7 +11,7 @@ public class Street implements Location {
 
     @Override
     public void display() {
-
+        System.out.printf("\t\tUlica: id: %d, naziv: %s, lat1: %f, lon1: %f, lat2: %f, lon2: %f, nkbr: %o\n", id,naziv,lat1,lon1,lat2,lon2,najveciKucniBroj);
     }
 
     public Street(Long id, String naziv, float lat1, float lon1, float lat2, float lon2, int najveciKucniBroj) {
