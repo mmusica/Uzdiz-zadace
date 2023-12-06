@@ -1,19 +1,22 @@
 package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.model.state.ActiveVehicleState;
+import org.foi.uzdiz.mmusica.model.state.VehicleContext;
+import org.foi.uzdiz.mmusica.model.state.VehicleState;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class Vehicle {
+public class Vehicle implements VehicleContext {
     private String registracija;
     private String opis;
     private double kapacitetTezine;
     private double kapacitetProstora;
     private int redoslijed;
     private float prosjecnaBrzina;
-
     private List<Location> deliveryArea;
     private String status;
     private BigDecimal money;
@@ -22,6 +25,7 @@ public class Vehicle {
     private LocalDateTime deliveryFinishedBy;
     private double currentlyLoadedWeight;
     private double getCurrentlyLoadedCapacity;
+    private VehicleState vehicleState;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
@@ -38,6 +42,29 @@ public class Vehicle {
         this.prosjecnaBrzina = prosjecnaBrzina;
         this.deliveryArea = deliveryArea;
         this.status = status;
+        this.vehicleState = new ActiveVehicleState(this);
+    }
+
+    @Override
+    public void changeState(VehicleState vehicleState) {
+        this.vehicleState = vehicleState;
+    }
+    public void clearData(){
+        this.vehicleState.clearData();
+    }
+    public void finalizeDeliveries() {
+        this.vehicleState.finalizeDeliveries();
+    }
+    public Paket loadPackageIntoVehicle(Paket paket) {
+        return this.vehicleState.loadPackageIntoVehicle(paket);
+    }
+
+    public void startDeliveringPackages(){
+        this.vehicleState.startDeliveringPackages();
+    }
+    public String getCroatianDate(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
+        return dateTime.format(formatter);
     }
 
     public BigDecimal getMoney() {
@@ -150,4 +177,5 @@ public class Vehicle {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

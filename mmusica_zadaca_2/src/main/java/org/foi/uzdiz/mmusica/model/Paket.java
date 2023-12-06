@@ -2,7 +2,6 @@ package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.enums.TypeOfPackage;
 import org.foi.uzdiz.mmusica.enums.TypeOfService;
-import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.observer.Subject;
 
@@ -41,12 +40,6 @@ public class Paket implements Subject {
         if(!observerList.contains(observer)) this.observerList.add(observer);
     }
 
-    public Location getPosiljateljLocation(String name){
-        for (Observer observer : this.observerList) {
-
-        }
-        return null;
-    }
     @Override
     public void removeObserver(Observer observer) {
         this.observerList.remove(observer);
@@ -65,6 +58,16 @@ public class Paket implements Subject {
     @Override
     public String getStatus() {
         return this.oznaka + ": " + this.statusIsporuke;
+    }
+
+    public double calculatePackageSize() {
+        double packageSize;
+        if (this.getVrstaPaketa().getOznaka().equals(TypeOfPackage.X.toString())) {
+            packageSize = this.getVisina() * this.getSirina() * this.getDuzina();
+        } else {
+            packageSize = this.getVrstaPaketa().getDuzina() * this.getVrstaPaketa().getVisina() * this.getVrstaPaketa().getSirina();
+        }
+        return packageSize;
     }
 
     public BigDecimal calculatePrice(){
