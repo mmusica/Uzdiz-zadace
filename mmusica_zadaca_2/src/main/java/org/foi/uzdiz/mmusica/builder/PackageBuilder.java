@@ -43,5 +43,6 @@ public interface PackageBuilder {
 
     PackageBuilder vrstaPaketa(PackageType packageType);
     PackageBuilder observerList(List<Observer> observerList);
+    PackageBuilder isErrored(boolean isErrored);
 
 }

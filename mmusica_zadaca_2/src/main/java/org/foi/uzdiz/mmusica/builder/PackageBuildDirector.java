@@ -32,6 +32,8 @@ public class PackageBuildDirector {
         this.packageBuilder = packageBuilder;
     }
     public Paket constructPackage(String[] a){
+        List<Observer> observerList = getObserverList(a);
+        boolean isErrored = (long) observerList.size() !=2;
         return packageBuilder.oznaka(a[OZNAKA])
                 .vrijemePrijema(getVrijemePrijema(a[VRIJEME_PRIJEMA]))
                 .posiljatelj(a[POSILJATELJ])
@@ -47,7 +49,8 @@ public class PackageBuildDirector {
                 .isBeingDelivered(false)
                 .isReceived(false)
                 .isDelivered(false)
-                .observerList(getObserverList(a))
+                .observerList(observerList)
+                .isErrored(isErrored)
                 .build();
     }
 
@@ -55,12 +58,15 @@ public class PackageBuildDirector {
         Observer primatelj = personRepository.find(a[PRIMATELJ]);
         Observer posiljatelj = personRepository.find(a[POSILJATELJ]);
         List<Observer> observerList = new ArrayList<>();
-        if(primatelj == null){ TerminalCommandHandler.getInstance().handleError(a,"Ovakav primatelj ne postoji %s".formatted(a[PRIMATELJ]));}
-        else if(posiljatelj == null) TerminalCommandHandler.getInstance().handleError(a,"Ovakav posiljatelj ne postoji %s".formatted(a[POSILJATELJ]));
-        else{
-            observerList = new ArrayList<>();
-            observerList.add(posiljatelj);
+        if (primatelj == null) {
+            TerminalCommandHandler.getInstance().handleError(a, "Ovakav primatelj ne postoji %s".formatted(a[PRIMATELJ]));
+        }  else{
             observerList.add(primatelj);
+        }
+        if (posiljatelj == null)
+            TerminalCommandHandler.getInstance().handleError(a, "Ovakav posiljatelj ne postoji %s".formatted(a[POSILJATELJ]));
+        else {
+            observerList.add(posiljatelj);
         }
         return observerList;
     }

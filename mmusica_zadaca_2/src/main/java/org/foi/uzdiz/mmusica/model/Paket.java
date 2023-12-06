@@ -27,9 +27,11 @@ public class Paket implements Subject {
     private BigDecimal iznosPouzeca;
     private String statusIsporuke;
     private LocalDateTime vrijemePreuzimanja;
+    //Ovih 4 booleana mogu biti state
     private boolean isReceived;
     private boolean isBeingDelivered;
     private boolean isDelivered;
+    private boolean isErrored;
 
     public Paket() {
     }
@@ -47,6 +49,7 @@ public class Paket implements Subject {
     public void notifyObservers() {
         observerList.forEach(observer -> observer.update(this));
     }
+    @Override
     public void setStatusIsporuke(String statusIsporuke) {
         this.statusIsporuke = statusIsporuke;
         this.notifyObservers();
@@ -55,11 +58,6 @@ public class Paket implements Subject {
     @Override
     public String getStatus() {
         return this.oznaka + ": " + this.statusIsporuke;
-    }
-
-    @Override
-    public String setStatus() {
-        return null;
     }
 
     public BigDecimal calculatePrice(){
@@ -228,19 +226,26 @@ public class Paket implements Subject {
         this.observerList = observerList;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Paket{" +
-//                "oznaka='" + oznaka + '\'' +
-//                ", vrijemePrijema=" + getCroatianDate(vrijemePrijema) +
-//                ", vrstaPaketa=" + vrstaPaketa.getOznaka() +
-//                ", vrsta usluge=" + uslugaDostave +
-//                ", iznosPouzeca=" + calculatePrice() +
-//                ", iznosDostave=" + getVehiclePrice() +
-//                ", statusIsporuke='" + statusIsporuke + '\'' + '\n' +
-//                ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
-//                '}';
-//    }
+    public boolean isErrored() {
+        return isErrored;
+    }
+
+    public void setErrored(boolean errored) {
+        isErrored = errored;
+    }
+        @Override
+    public String toString() {
+        return "Paket{" +
+                "oznaka='" + oznaka + '\'' +
+                ", vrijemePrijema=" + getCroatianDate(vrijemePrijema) +
+                ", vrstaPaketa=" + vrstaPaketa.getOznaka() +
+                ", vrsta usluge=" + uslugaDostave +
+                ", iznosPouzeca=" + calculatePrice() +
+                ", iznosDostave=" + getVehiclePrice() +
+                ", statusIsporuke='" + statusIsporuke + '\'' + '\n' +
+                ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
+                '}';
+    }
 
 
 }

@@ -117,4 +117,10 @@ public class PackageBuilderImpl implements PackageBuilder {
         this.paket.getObserverList().addAll(observerList);
         return this;
     }
+
+    @Override
+    public PackageBuilder isErrored(boolean isErrored) {
+        this.paket.setErrored(isErrored);
+        return this;
+    }
 }

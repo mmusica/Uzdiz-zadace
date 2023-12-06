@@ -35,6 +35,7 @@ public class DeliveryOffice {
                     logLoadedPackages(packagesToLoad, vehicle);
                 }
             });
+            if(!receivedPackages.isEmpty()) break;
         }
         return receivedPackages;
     }
@@ -47,22 +48,25 @@ public class DeliveryOffice {
 
     private List<Paket> getPackagesToLoad(Vehicle vehicle, List<Paket> receivedPackages) {
         List<Paket> packagesToLoad = new ArrayList<>();
+
         for (Paket paket : receivedPackages) {
-            if (isUrgentAndNotBeingDelivered(paket) && hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket)) {
+            if(paket.isErrored()) continue;
+            if (isUrgentAndNotBeingDelivered(paket) && hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket)  && !paket.isErrored()) {
+                vehicle.setGetCurrentlyLoadedCapacity(vehicle.getGetCurrentlyLoadedCapacity() + calculatePackageSize(paket));
+                vehicle.setCurrentlyLoadedWeight(vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
                 paket.setBeingDelivered(true);
                 paket.setStatusIsporuke("Ukrcan u vozilo");
                 packagesToLoad.add(paket);
             }
         }
         for (Paket paket : receivedPackages) {
-            if (hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket) && !paket.isBeingDelivered()) {
+            if (hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket) && !paket.isBeingDelivered() && !paket.isErrored()) {
+                vehicle.setGetCurrentlyLoadedCapacity(vehicle.getGetCurrentlyLoadedCapacity() + calculatePackageSize(paket));
+                vehicle.setCurrentlyLoadedWeight(vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
                 paket.setBeingDelivered(true);
                 paket.setStatusIsporuke("Ukrcan u vozilo");
                 packagesToLoad.add(paket);
             }
-//            if(!hasEnoughCapacity(vehicle, paket) || !hasEnoughWeight(vehicle, paket)){
-//                System.out.println("MANJAK KAPACITETA: Vozilo %s nema dovoljno kapaciteta za pakete".formatted(vehicle.getOpis()));
-//            }
         }
         return packagesToLoad;
     }
@@ -74,16 +78,18 @@ public class DeliveryOffice {
     private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
         double capacity = vehicle.getKapacitetProstora() - vehicle.getGetCurrentlyLoadedCapacity();
         double packageSize = 0;
+        packageSize = calculatePackageSize(paket);
+        return packageSize <= capacity;
+    }
+
+    private static double calculatePackageSize(Paket paket) {
+        double packageSize;
         if (paket.getVrstaPaketa().getOznaka().equals(TypeOfPackage.X.toString())) {
             packageSize = paket.getVisina() * paket.getSirina() * paket.getDuzina();
         } else {
             packageSize = paket.getVrstaPaketa().getDuzina() * paket.getVrstaPaketa().getVisina() * paket.getVrstaPaketa().getSirina();
         }
-        if (packageSize <= capacity) {
-            vehicle.setGetCurrentlyLoadedCapacity(vehicle.getGetCurrentlyLoadedCapacity() + packageSize);
-            return true;
-        }
-        return false;
+        return packageSize;
     }
 
     private boolean hasEnoughWeight(Vehicle vehicle, Paket paket) {
@@ -91,7 +97,6 @@ public class DeliveryOffice {
         double packageWeight = 0;
         packageWeight = paket.getTezina();
         if (packageWeight <= capacity) {
-            vehicle.setCurrentlyLoadedWeight(vehicle.getCurrentlyLoadedWeight() + packageWeight);
             return true;
         }
         return false;
@@ -102,12 +107,12 @@ public class DeliveryOffice {
         // ili nakon punog sata vozilo koje ima barem jedan ukrcani paket hitne dostave
         // ili je popunjeno minimalno 50% kapaciteta (težine ili prostora) kreće prema odredištima paketa.
         for (Vehicle vehicle : vehicles) {
-            if(vehicle.isDriving()) finalizeDeliveries(vehicle);
-            if ((isVehicleCapacityFilled(vehicle) || isHourLaterWithUrgentPackage(vehicle) || is50percentFull(vehicle)) && !vehicle.isDriving()) {
+            if (vehicle.isDriving()) finalizeDeliveries(vehicle);
+            if ((isVehicleCapacityFilled(vehicle) || isHourLaterWithUrgentPackage(vehicle) || is50percentFull(vehicle)) && !vehicle.isDriving() && !vehicle.getPackages().isEmpty()) {
                 vehicle.setDriving(true);
                 vehicle.setDeliveryFinishedBy(TerminalCommandHandler.getInstance().getVirtualniSat()
                         .plusMinutes(TerminalCommandHandler.getInstance().getVrijemeIsporuke()));
-                vehicle.getPackages().forEach(paket ->{
+                vehicle.getPackages().forEach(paket -> {
                     paket.setBeingDelivered(true);
                     paket.setStatusIsporuke("Trenutno u isporuci");
                 });
@@ -120,18 +125,19 @@ public class DeliveryOffice {
         vehicles.addAll(drivingVehicles);
 
         LocalDateTime currentHourTime = TerminalCommandHandler.getInstance().getVirtualniSat();
-        if(currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime)){
+        if (currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime)) {
             fullHourPassed = fullHourPassed.plusHours(1);
         }
     }
 
-    private String getCroatianDate(LocalDateTime dateTime){
+    private String getCroatianDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
     }
+
     private void finalizeDeliveries(Vehicle vehicle) {
         LocalDateTime currentTime = TerminalCommandHandler.getInstance().getVirtualniSat();
-        if(vehicle.isDriving() && (vehicle.getDeliveryFinishedBy().isEqual(currentTime) || vehicle.getDeliveryFinishedBy().isBefore(currentTime))){
+        if (vehicle.isDriving() && (vehicle.getDeliveryFinishedBy().isEqual(currentTime) || vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
             vehicle.getPackages().forEach(paket -> {
                 paket.setBeingDelivered(false);
                 paket.setDelivered(true);
@@ -142,7 +148,6 @@ public class DeliveryOffice {
             clearVehicleData(vehicle);
             System.out.printf("ZAVRSENA DOSTAVA vozila %s u virtualno vrijeme: %s%n",
                     vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
-
 
         }
     }
@@ -155,15 +160,16 @@ public class DeliveryOffice {
         vehicle.setDeliveryFinishedBy(null);
     }
 
-    private boolean is50percentFull(Vehicle vehicle){
+    private boolean is50percentFull(Vehicle vehicle) {
         double halfWeight = vehicle.getKapacitetTezine() / 2;
         double halfCapacity = vehicle.getKapacitetProstora() / 2;
         return vehicle.getGetCurrentlyLoadedCapacity() >= halfCapacity || vehicle.getCurrentlyLoadedWeight() >= halfWeight;
     }
+
     private boolean isHourLaterWithUrgentPackage(Vehicle vehicle) {
         LocalDateTime currentHourTime = TerminalCommandHandler.getInstance().getVirtualniSat();
         List<Paket> list = vehicle.getPackages().stream().filter(paket -> paket.getUslugaDostave().equals(TypeOfService.H.toString())).toList();
-        if(currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime)){
+        if (currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime)) {
             return !list.isEmpty();
         }
         return false;

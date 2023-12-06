@@ -45,6 +45,7 @@ public class ReceptionOffice {
         paketRepository.getAll().forEach(paket -> {
             if ((paket.getTimeOfReceival().isBefore(currentVirtualniSat) || paket.getTimeOfReceival().isEqual(currentVirtualniSat)) && !paket.isReceived()) {
                 paket.setReceived(true);
+                System.out.println("Paket " + paket.getOznaka() + " -> PREUZET");
                 paket.setStatusIsporuke("Preuzet");
                 paket.setVrijemePreuzimanja(currentVirtualniSat);
                 money = money.add(paket.calculatePrice());

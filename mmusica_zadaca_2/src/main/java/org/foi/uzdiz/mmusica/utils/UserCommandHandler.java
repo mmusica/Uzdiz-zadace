@@ -49,10 +49,8 @@ public class UserCommandHandler {
         List<Paket> primljeniPaketi = all.stream().filter(paket -> paket.isReceived() && !paket.isDelivered()).toList();
         List<Paket> dostavljeniPaketi = all.stream().filter(Paket::isDelivered).toList();
         primljeniPaketi.forEach(System.out::println);
-        //TablePrinter.printTable(primljeniPaketi);
         System.out.println("\nDostavljeni");
         dostavljeniPaketi.forEach(System.out::println);
-        //TablePrinter.printTable(dostavljeniPaketi);
     }
 
     private boolean isVirtualnoVrijemeValid(String[] commandArray) {
