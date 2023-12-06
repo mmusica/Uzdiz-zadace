@@ -18,9 +18,9 @@ import java.util.List;
 public class DeliveryOffice {
     public final Deque<Vehicle> vehicles = new ArrayDeque<>();
     private LocalDateTime fullHourPassed = TerminalCommandHandler.getInstance().getVirtualniSat().plusHours(1);
-    private final Repository<Vehicle> vehicleRepository = RepositoryManager.getINSTANCE().getVehicleRepository();
 
     public DeliveryOffice() {
+        Repository<Vehicle> vehicleRepository = RepositoryManager.getINSTANCE().getVehicleRepository();
         vehicles.addAll(vehicleRepository.getAll());
     }
 
@@ -77,8 +77,7 @@ public class DeliveryOffice {
 
     private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
         double capacity = vehicle.getKapacitetProstora() - vehicle.getGetCurrentlyLoadedCapacity();
-        double packageSize = 0;
-        packageSize = calculatePackageSize(paket);
+        double packageSize = calculatePackageSize(paket);
         return packageSize <= capacity;
     }
 
@@ -94,12 +93,8 @@ public class DeliveryOffice {
 
     private boolean hasEnoughWeight(Vehicle vehicle, Paket paket) {
         double capacity = vehicle.getKapacitetTezine() - vehicle.getCurrentlyLoadedWeight();
-        double packageWeight = 0;
-        packageWeight = paket.getTezina();
-        if (packageWeight <= capacity) {
-            return true;
-        }
-        return false;
+        double packageWeight = paket.getTezina();
+        return packageWeight <= capacity;
     }
 
     public void deliverPackages() {
