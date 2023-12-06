@@ -37,7 +37,7 @@ public class Paket implements Subject {
     }
     @Override
     public void registerObserver(Observer observer) {
-        this.observerList.add(observer);
+        if(!observerList.contains(observer)) this.observerList.add(observer);
     }
 
     @Override

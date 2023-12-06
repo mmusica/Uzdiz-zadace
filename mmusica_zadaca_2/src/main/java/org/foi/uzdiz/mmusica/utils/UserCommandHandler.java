@@ -56,6 +56,8 @@ public class UserCommandHandler {
                     }else{
                         updateObserver(statusUpdate, paket, observer);
                     }
+                }else{
+                    return FAIL_RESPONSE;
                 }
                 break;
             }
