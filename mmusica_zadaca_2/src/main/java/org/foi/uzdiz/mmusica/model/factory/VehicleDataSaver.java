@@ -2,6 +2,10 @@ package org.foi.uzdiz.mmusica.model.factory;
 
 import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.model.state.ActiveVehicleState;
+import org.foi.uzdiz.mmusica.model.state.BrokenVehicleState;
+import org.foi.uzdiz.mmusica.model.state.InactiveVehicleState;
+import org.foi.uzdiz.mmusica.model.state.VehicleState;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
@@ -50,11 +54,41 @@ public class VehicleDataSaver extends DataSaver<Vehicle> {
         }
 
         List<Location> deliveryArea = createDeliveryArea(a);
-        return new Vehicle(a[REGISTRACIJA], a[OPIS],
+        Vehicle vehicle = new Vehicle(a[REGISTRACIJA], a[OPIS],
                 Double.parseDouble(a[KAPACITET_TEZINE].replace(',', '.')),
                 Double.parseDouble(a[KAPACITET_PROSTORA].replace(',', '.')),
                 Integer.parseInt(a[REDOSLIJED].replace(',', '.')), new BigDecimal(0), new ArrayList<>(),
-                Float.parseFloat(a[PROSJECNA_BRZINA]), deliveryArea, a[STATUS]);
+                Float.parseFloat(a[PROSJECNA_BRZINA]), deliveryArea);
+        VehicleState vehicleState = getVehicleState(a, vehicle);
+        if(vehicleState == null){
+            TerminalCommandHandler.getInstance().handleError(a, "Vozilo u nepoznatom stanju, greska u redu %d".formatted(counter));
+            return null;
+        }
+
+        vehicle.changeState(vehicleState);
+        return vehicle;
+    }
+
+    private static VehicleState getVehicleState(String[] a, Vehicle vehicle) {
+       VehicleState vehicleState = null;
+        switch (a[STATUS]){
+           case "A":{
+               vehicleState = new ActiveVehicleState(vehicle);
+               break;
+           }
+           case "NA":{
+               vehicleState = new InactiveVehicleState(vehicle);
+               break;
+           }
+           case "NI":{
+               vehicleState = new BrokenVehicleState(vehicle);
+               break;
+           }
+           default:{
+               break;
+           }
+       }
+       return vehicleState;
     }
 
     private List<Location> createDeliveryArea(String[] line) {

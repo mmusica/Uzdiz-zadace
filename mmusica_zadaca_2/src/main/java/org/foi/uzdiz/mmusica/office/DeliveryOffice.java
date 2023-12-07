@@ -27,7 +27,7 @@ public class DeliveryOffice {
                 List<Paket> loadedPackages = getLoadedPackages(vehicle, receivedPackages);
                 if(!loadedPackages.isEmpty()){
                     receivedPackages.removeAll(loadedPackages);
-                    logLoadedPackages(loadedPackages, vehicle);
+                   // logLoadedPackages(loadedPackages, vehicle);
                 }
             });
             if(!receivedPackages.isEmpty()) break;
@@ -37,6 +37,7 @@ public class DeliveryOffice {
     private void logLoadedPackages(List<Paket> packages, Vehicle vehicle) {
         for (Paket p : packages) {
             System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n", TerminalCommandHandler.getInstance().getCroDateString(), p.getOznaka(), p.getUslugaDostave(), vehicle.getOpis());
+
         }
     }
     private List<Paket> getLoadedPackages(Vehicle vehicle, List<Paket> receivedPackages) {

@@ -7,4 +7,5 @@ public interface VehicleState {
     void startDeliveringPackages();
     Paket loadPackageIntoVehicle(Paket paket);
     void clearData();
+    String giveStatus();
 }

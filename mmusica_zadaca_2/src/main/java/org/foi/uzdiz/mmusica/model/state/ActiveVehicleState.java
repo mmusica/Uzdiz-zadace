@@ -32,6 +32,7 @@ public class ActiveVehicleState implements VehicleState {
         this.vehicle.setGetCurrentlyLoadedCapacity(this.vehicle.getGetCurrentlyLoadedCapacity() + paket.calculatePackageSize());
         this.vehicle.setCurrentlyLoadedWeight(this.vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
         paket.setBeingDelivered(true);
+        System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n", TerminalCommandHandler.getInstance().getCroDateString(), paket.getOznaka(), paket.getUslugaDostave(), vehicle.getOpis());
         paket.setStatusIsporuke("Ukrcan u vozilo");
         this.vehicle.getPackages().add(paket);
         return this.vehicle.getPackages().get(vehicle.getPackages().size()-1);
@@ -55,5 +56,10 @@ public class ActiveVehicleState implements VehicleState {
         this.vehicle.setGetCurrentlyLoadedCapacity(0);
         this.vehicle.setDriving(false);
         this.vehicle.setDeliveryFinishedBy(null);
+    }
+
+    @Override
+    public String giveStatus() {
+        return "Aktivan";
     }
 }

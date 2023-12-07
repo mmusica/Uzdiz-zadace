@@ -31,4 +31,9 @@ public class BrokenVehicleState implements VehicleState{
     public void clearData() {
 
     }
+
+    @Override
+    public String giveStatus() {
+        return "Neispravan";
+    }
 }

@@ -9,6 +9,7 @@ import org.foi.uzdiz.mmusica.model.state.InactiveVehicleState;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
+import org.foi.uzdiz.mmusica.visitor.VehicleDataDisplayVisitor;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -29,6 +30,7 @@ public class UserCommandHandler {
     private static final int VEHICLE_ID = 1;
     private static final int VEHICLE_STATE = 2;
 
+    private static final String STATUS_VOZILA = "SV";
     private final ReceptionOffice receptionOffice = new ReceptionOffice();
     final String regexPo = "^PO '([A-Za-z ]+)' \\S+ [ND]$";
     final String regexPs = "^PS\\s[^\\s]+(?:\\sA|\\sNI|\\sNA)$";
@@ -49,6 +51,14 @@ public class UserCommandHandler {
                 handeIspisCommand();
                 break;
             }
+            case STATUS_VOZILA:{
+                System.out.println("STATUS|\tUKUPNO KM|\tBROJ PAKETA|\tZAUZETOST|\tBROJ VOZNJI");
+                RepositoryManager.getINSTANCE().getVehicleRepository()
+                        .getAll()
+                        .forEach(vehicle -> vehicle.accept(new VehicleDataDisplayVisitor()));
+                break;
+            }
+
             case QUIT: {
                 break;
             }

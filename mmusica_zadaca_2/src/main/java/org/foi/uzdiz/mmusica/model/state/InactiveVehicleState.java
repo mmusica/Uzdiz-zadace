@@ -30,4 +30,9 @@ public class InactiveVehicleState implements VehicleState{
     public void clearData() {
 
     }
+
+    @Override
+    public String giveStatus() {
+        return "Neaktivan";
+    }
 }

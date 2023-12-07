@@ -11,6 +11,7 @@ public class Place implements Location {
     public void display() {
         System.out.println("\tGrad/Mjesto "+this.id+ " "+this.naziv+".");
         this.locationList.forEach(Location::display);
+        System.out.println("\t------------------------------------------------------------------------------------------------------------------------");
     }
 
     public Place(Long id, String naziv, List<Location> locationList) {

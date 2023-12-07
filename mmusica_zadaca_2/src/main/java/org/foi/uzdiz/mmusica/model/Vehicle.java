@@ -1,16 +1,17 @@
 package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.model.locations.Location;
-import org.foi.uzdiz.mmusica.model.state.ActiveVehicleState;
 import org.foi.uzdiz.mmusica.model.state.VehicleContext;
 import org.foi.uzdiz.mmusica.model.state.VehicleState;
+import org.foi.uzdiz.mmusica.visitor.DataDisplayVisitor;
+import org.foi.uzdiz.mmusica.visitor.VehicleDisplay;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class Vehicle implements VehicleContext {
+public class Vehicle implements VehicleContext, VehicleDisplay {
     private String registracija;
     private String opis;
     private double kapacitetTezine;
@@ -18,7 +19,6 @@ public class Vehicle implements VehicleContext {
     private int redoslijed;
     private float prosjecnaBrzina;
     private List<Location> deliveryArea;
-    private String status;
     private BigDecimal money;
     private List<Paket> packages;
     private boolean isDriving;
@@ -29,7 +29,7 @@ public class Vehicle implements VehicleContext {
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
-                   float prosjecnaBrzina, List<Location> deliveryArea, String status) {
+                   float prosjecnaBrzina, List<Location> deliveryArea) {
         this.registracija = registracija;
         this.opis = opis;
         this.kapacitetTezine = kapacitetTezine;
@@ -41,8 +41,6 @@ public class Vehicle implements VehicleContext {
         this.currentlyLoadedWeight = 0;
         this.prosjecnaBrzina = prosjecnaBrzina;
         this.deliveryArea = deliveryArea;
-        this.status = status;
-        this.vehicleState = new ActiveVehicleState(this);
     }
 
     @Override
@@ -65,6 +63,10 @@ public class Vehicle implements VehicleContext {
     public String getCroatianDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
+    }
+    @Override
+    public void accept(DataDisplayVisitor dataDisplayVisitor) {
+        dataDisplayVisitor.visitVehicle(this);
     }
 
     public BigDecimal getMoney() {
@@ -170,12 +172,8 @@ public class Vehicle implements VehicleContext {
         this.deliveryArea = deliveryArea;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public VehicleState getVehicleState() {
+        return vehicleState;
     }
 
 }
