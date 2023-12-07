@@ -1,7 +1,11 @@
 package org.foi.uzdiz.mmusica.utils;
 
 import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.model.state.ActiveVehicleState;
+import org.foi.uzdiz.mmusica.model.state.BrokenVehicleState;
+import org.foi.uzdiz.mmusica.model.state.InactiveVehicleState;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
@@ -21,9 +25,15 @@ public class UserCommandHandler {
     private static final String FAIL_RESPONSE = "Nepoznata naredba";
     private static final String VIRTUALNO_VRIJEME_FAIL_RESPONSE = "VR naredba nije valjana";
     private static final String SUCCESS_RESPONSE = "Naredba uspjesno izvrsena!";
+    private static final String PROMJENA_STANJA = "PS";
+    private static final int VEHICLE_ID = 1;
+    private static final int VEHICLE_STATE = 2;
+
     private final ReceptionOffice receptionOffice = new ReceptionOffice();
-    final String regex = "^PO '([A-Za-z ]+)' \\S+ [ND]$";
-    final Pattern pattern = Pattern.compile(regex);
+    final String regexPo = "^PO '([A-Za-z ]+)' \\S+ [ND]$";
+    final String regexPs = "^PS\\s[^\\s]+(?:\\sA|\\sNI|\\sNA)$";
+    final Pattern patternPs = Pattern.compile(regexPs);
+    final Pattern patternPo = Pattern.compile(regexPo);
 
 
     public String handleUserCommand(String command) {
@@ -61,11 +71,37 @@ public class UserCommandHandler {
                 }
                 break;
             }
+            case PROMJENA_STANJA:{
+                if(isPromjenaStanjaCommandValid(command)){
+                    Vehicle vozilo = RepositoryManager.getINSTANCE().getVehicleRepository().find(commandArray[VEHICLE_ID]);
+                    if(vozilo!=null){
+                        voziloChangeState(vozilo, commandArray[VEHICLE_STATE]);
+                    }else{
+                        Logger.getGlobal().log(Level.SEVERE, "Vozilo ne postoji");
+                    }
+                }else {
+                    return FAIL_RESPONSE;
+                }
+                break;
+            }
             default: {
                 return FAIL_RESPONSE;
             }
         }
         return SUCCESS_RESPONSE;
+    }
+
+    private void voziloChangeState(Vehicle vozilo, String s) {
+        switch (s) {
+            case "A" -> vozilo.changeState(new ActiveVehicleState(vozilo));
+            case "NI" -> vozilo.changeState(new BrokenVehicleState(vozilo));
+            case "NA" -> vozilo.changeState(new InactiveVehicleState(vozilo));
+        }
+    }
+
+    private boolean isPromjenaStanjaCommandValid(String command) {
+        final Matcher matcher = patternPs.matcher(command);
+        return matcher.matches();
     }
 
     private String getStatusUpdate(String[] commandArray) {
@@ -79,7 +115,7 @@ public class UserCommandHandler {
     }
 
     private String getPersonName(String command) {
-        final Matcher matcher = pattern.matcher(command);
+        final Matcher matcher = patternPs.matcher(command);
         if(matcher.matches()) return matcher.group(1);
         return null;
     }
@@ -93,7 +129,7 @@ public class UserCommandHandler {
     }
 
     private boolean isPromjenaObavijestiCommandValid(String command) {
-        final Matcher matcher = pattern.matcher(command);
+        final Matcher matcher = patternPo.matcher(command);
         return matcher.matches();
     }
 

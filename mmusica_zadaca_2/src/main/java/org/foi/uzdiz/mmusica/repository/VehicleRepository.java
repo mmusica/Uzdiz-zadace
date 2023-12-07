@@ -30,6 +30,8 @@ public class VehicleRepository implements Repository<Vehicle>{
 
     @Override
     public <J> Vehicle find(J id) {
-        return null;
+        List<Vehicle> list = vehiclesList.stream().filter(vehicle -> vehicle.getRegistracija().equals(id)).toList();
+        if(list.isEmpty() || (long) list.size() >1) return null;
+        else return list.get(0);
     }
 }

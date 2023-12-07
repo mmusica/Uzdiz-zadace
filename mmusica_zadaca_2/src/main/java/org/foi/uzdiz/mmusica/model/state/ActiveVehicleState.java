@@ -7,7 +7,7 @@ import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 import java.time.LocalDateTime;
 
 public class ActiveVehicleState implements VehicleState {
-    Vehicle vehicle;
+    private final Vehicle vehicle;
     public ActiveVehicleState(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
