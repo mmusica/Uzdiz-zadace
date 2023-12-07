@@ -21,7 +21,19 @@ public class ReceptionOffice {
     public BigDecimal money = new BigDecimal(0);
     public void receivePackage(String timeToIncrement) {
         LocalDateTime originalTime = TerminalCommandHandler.getInstance().getVirtualniSat();
+        LocalTime nextHour = TerminalCommandHandler.getInstance().getVirtualniSat().plusHours(1).toLocalTime();
         while (true) {
+
+            deliveryOffice.deliverPackages();
+            if(isFullHourAndNotOriginaltime(TerminalCommandHandler.getInstance().getVirtualniSat(), originalTime, nextHour)){
+                nextHour = TerminalCommandHandler.getInstance().getVirtualniSat().plusHours(1).toLocalTime();
+
+                receivedPackages.addAll(getReceivedPackages());
+                receivedPackages = deliveryOffice.loadPackages(receivedPackages);
+                deliveryOffice.deliverPackages();
+            }
+
+
             if (isDone(timeToIncrement, originalTime)) break;
             Logger.getGlobal().log(Level.INFO, "ISPIS VIRTUALNOG SATA: " + TerminalCommandHandler.getInstance().getCroDateString());
             try {
@@ -30,13 +42,14 @@ public class ReceptionOffice {
                 throw new RuntimeException(e);
             }
 
-            deliveryOffice.deliverPackages();
-            receivedPackages.addAll(getReceivedPackages());
-            receivedPackages = deliveryOffice.loadPackages(receivedPackages);
-            deliveryOffice.deliverPackages();
+
             incrementVirtualniSat(TerminalCommandHandler.getInstance().getMnoziteljSekunde());
 
         }
+    }
+
+    private boolean isFullHourAndNotOriginaltime(LocalDateTime virtualniSat, LocalDateTime originalTime, LocalTime nextHour) {
+        return virtualniSat.getHour() >= nextHour.getHour() && !virtualniSat.isEqual(originalTime);
     }
 
     private List<Paket> getReceivedPackages() {

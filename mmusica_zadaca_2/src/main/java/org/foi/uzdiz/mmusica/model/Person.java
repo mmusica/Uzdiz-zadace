@@ -7,6 +7,7 @@ import org.foi.uzdiz.mmusica.observer.Subject;
 
 public class Person implements Observer {
     private String name;
+    private Location area;
     private Location grad;
     private Location ulica;
     private int kbr;
@@ -16,9 +17,10 @@ public class Person implements Observer {
         System.out.println(this.name + ": Paket --> " + subject.getStatus());
     }
 
-    public Person(String name, Location grad, Location ulica, int kbr) {
+    public Person(String name, Location area, Location grad, Location ulica, int kbr) {
         this.name = name;
         this.grad = grad;
+        this.area = area;
         this.ulica = ulica;
         this.kbr = kbr;
     }
@@ -54,5 +56,13 @@ public class Person implements Observer {
 
     public void setKbr(int kbr) {
         this.kbr = kbr;
+    }
+
+    public Location getArea() {
+        return area;
+    }
+
+    public void setArea(Location area) {
+        this.area = area;
     }
 }

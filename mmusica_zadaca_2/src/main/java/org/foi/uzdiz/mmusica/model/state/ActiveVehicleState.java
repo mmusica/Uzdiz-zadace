@@ -29,13 +29,28 @@ public class ActiveVehicleState implements VehicleState {
     }
     @Override
     public Paket loadPackageIntoVehicle(Paket paket) {
-        this.vehicle.setGetCurrentlyLoadedCapacity(this.vehicle.getGetCurrentlyLoadedCapacity() + paket.calculatePackageSize());
-        this.vehicle.setCurrentlyLoadedWeight(this.vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
-        paket.setBeingDelivered(true);
-        System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n", TerminalCommandHandler.getInstance().getCroDateString(), paket.getOznaka(), paket.getUslugaDostave(), vehicle.getOpis());
-        paket.setStatusIsporuke("Ukrcan u vozilo");
-        this.vehicle.getPackages().add(paket);
-        return this.vehicle.getPackages().get(vehicle.getPackages().size()-1);
+        if (hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket) && !paket.isBeingDelivered() && !paket.isErrored()) {
+            this.vehicle.setGetCurrentlyLoadedCapacity(this.vehicle.getGetCurrentlyLoadedCapacity() + paket.calculatePackageSize());
+            this.vehicle.setCurrentlyLoadedWeight(this.vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
+
+            paket.setBeingDelivered(true);
+            System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n", TerminalCommandHandler.getInstance().getCroDateString(), paket.getOznaka(), paket.getUslugaDostave(), vehicle.getOpis());
+            paket.setStatusIsporuke("Ukrcan u vozilo");
+
+            this.vehicle.getPackages().add(paket);
+            return this.vehicle.getPackages().get(vehicle.getPackages().size()-1);
+        }
+        return null;
+    }
+    private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
+        double capacity = vehicle.getKapacitetProstora() - vehicle.getGetCurrentlyLoadedCapacity();
+        double packageSize = paket.calculatePackageSize();
+        return packageSize <= capacity;
+    }
+    private boolean hasEnoughWeight(Vehicle vehicle, Paket paket) {
+        double capacity = vehicle.getKapacitetTezine() - vehicle.getCurrentlyLoadedWeight();
+        double packageWeight = paket.getTezina();
+        return packageWeight <= capacity;
     }
     @Override
     public void startDeliveringPackages() {

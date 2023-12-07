@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.model;
 
 import org.foi.uzdiz.mmusica.enums.TypeOfPackage;
 import org.foi.uzdiz.mmusica.enums.TypeOfService;
+import org.foi.uzdiz.mmusica.model.locations.Location;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.observer.Subject;
 
@@ -101,6 +102,9 @@ public class Paket implements Subject {
     private String getCroatianDate(LocalDateTime dateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
+    }
+    public Location getDestination() {
+        return primatelj.getArea();
     }
 
     public String getOznaka() {
@@ -256,6 +260,4 @@ public class Paket implements Subject {
                 ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
                 '}';
     }
-
-
 }

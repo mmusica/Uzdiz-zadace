@@ -4,4 +4,5 @@ public interface Location {
     void display();
     Long getId();
     Location findStreet(long id);
+
 }

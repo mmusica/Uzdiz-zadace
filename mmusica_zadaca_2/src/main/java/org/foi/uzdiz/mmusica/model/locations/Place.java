@@ -42,6 +42,7 @@ public class Place implements Location {
         return null;
     }
 
+
     public void setId(Long id) {
         this.id = id;
     }

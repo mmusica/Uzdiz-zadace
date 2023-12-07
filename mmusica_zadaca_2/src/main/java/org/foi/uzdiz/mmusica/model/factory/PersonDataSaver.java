@@ -57,7 +57,8 @@ public class PersonDataSaver extends DataSaver<Person> {
             TerminalCommandHandler.getInstance().handleError(a, "Osoba: Ulica ne postoji -> red %d".formatted(counter[0]));
             return null;
         }
-        return new Person(name, place, street, kbr);
+        Location area = findArea(street.getId());
+        return new Person(name, area, place, street, kbr);
     }
 
     private Location findPlace(long l) {
@@ -66,5 +67,15 @@ public class PersonDataSaver extends DataSaver<Person> {
             if (location.getId() == l) return location;
         }
         return null;
+    }
+    private Location findArea(long l){
+        Location area=null;
+        List<Location> all = RepositoryManager.getINSTANCE().getAreasRepository().getAll();
+        for(Location location : all){
+            if(location.findStreet(l)!=null){
+                area = location;
+            }
+        }
+        return area;
     }
 }
