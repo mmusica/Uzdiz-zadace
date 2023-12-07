@@ -34,12 +34,6 @@ public class DeliveryOffice {
         }
         return receivedPackages;
     }
-    private void logLoadedPackages(List<Paket> packages, Vehicle vehicle) {
-        for (Paket p : packages) {
-            System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n", TerminalCommandHandler.getInstance().getCroDateString(), p.getOznaka(), p.getUslugaDostave(), vehicle.getOpis());
-
-        }
-    }
     private List<Paket> getLoadedPackages(Vehicle vehicle, List<Paket> receivedPackages) {
         List<Paket> loadedPackages = new ArrayList<>();
         for (Paket paket : receivedPackages) {
