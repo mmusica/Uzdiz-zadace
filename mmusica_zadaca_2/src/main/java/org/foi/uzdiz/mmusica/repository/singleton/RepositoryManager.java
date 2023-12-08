@@ -17,7 +17,6 @@ public class RepositoryManager {
     private Repository<Location> streetRepository;
     private Repository<Person> personRepository;
 
-
     static {
         INSTANCE = new RepositoryManager(
                 new PackageRepository(),

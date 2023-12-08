@@ -1,5 +1,7 @@
 package org.foi.uzdiz.mmusica.model.locations;
 
+import org.foi.uzdiz.mmusica.voznja.GPS;
+
 import java.util.List;
 
 public class Place implements Location {
@@ -42,6 +44,32 @@ public class Place implements Location {
         return null;
     }
 
+    @Override
+    public GPS getStartOfStreet(long id) {
+        for (Location l : locationList) {
+            GPS gps = l.getStartOfStreet(id);
+            if (gps != null) return gps;
+        }
+        return null;
+    }
+
+    @Override
+    public GPS getEndOfStreet(long id) {
+        for (Location l : locationList) {
+            GPS gps = l.getEndOfStreet(id);
+            if (gps != null) return gps;
+        }
+        return null;
+    }
+
+    @Override
+    public int getNajveciKbrUlice(long id) {
+        for (Location l : locationList) {
+            int nkbr = l.getNajveciKbrUlice(id);
+            if (nkbr != -1) return nkbr;
+        }
+        return -1;
+    }
 
     public void setId(Long id) {
         this.id = id;

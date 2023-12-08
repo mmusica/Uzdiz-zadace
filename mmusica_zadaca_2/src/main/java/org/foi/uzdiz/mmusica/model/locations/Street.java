@@ -1,5 +1,7 @@
 package org.foi.uzdiz.mmusica.model.locations;
 
+import org.foi.uzdiz.mmusica.voznja.GPS;
+
 public class Street implements Location {
     private Long id;
     private String naziv;
@@ -11,7 +13,7 @@ public class Street implements Location {
 
     @Override
     public void display() {
-        System.out.printf("\t\tUlica: id: %d, naziv: %s, lat1: %f, lon1: %f, lat2: %f, lon2: %f, nkbr: %o\n", id,naziv,lat1,lon1,lat2,lon2,najveciKucniBroj);
+        System.out.println("\t\tUlica: id: %d, naziv: %s, lat1: %f, lon1: %f, lat2: %f, lon2: %f, nkbr:".formatted(id,naziv,lat1,lon1,lat2,lon2)+najveciKucniBroj);
     }
 
     public Street(Long id, String naziv, float lat1, float lon1, float lat2, float lon2, int najveciKucniBroj) {
@@ -33,6 +35,23 @@ public class Street implements Location {
     public Location findStreet(long id) {
         if (this.id == id) return this;
         else return null;
+    }
+
+    @Override
+    public GPS getStartOfStreet(long id) {
+        if (this.id == id) return new GPS(lat1,lon1);
+        else return null;
+    }
+
+    @Override
+    public GPS getEndOfStreet(long id) {
+        if (this.id == id) return new GPS(lat2,lon2);
+        else return null;
+    }
+    @Override
+    public int getNajveciKbrUlice(long id) {
+        if (this.id == id) return this.najveciKucniBroj;
+        else return -1;
     }
 
     public void setId(Long id) {

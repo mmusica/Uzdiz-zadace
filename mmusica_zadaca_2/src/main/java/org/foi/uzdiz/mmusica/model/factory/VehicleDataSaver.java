@@ -9,6 +9,7 @@ import org.foi.uzdiz.mmusica.model.state.VehicleState;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
+import org.foi.uzdiz.mmusica.voznja.GPS;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class VehicleDataSaver extends DataSaver<Vehicle> {
                 Double.parseDouble(a[KAPACITET_TEZINE].replace(',', '.')),
                 Double.parseDouble(a[KAPACITET_PROSTORA].replace(',', '.')),
                 Integer.parseInt(a[REDOSLIJED].replace(',', '.')), new BigDecimal(0), new ArrayList<>(),
-                Float.parseFloat(a[PROSJECNA_BRZINA]), deliveryArea);
+                Float.parseFloat(a[PROSJECNA_BRZINA]), deliveryArea, getOfficeGPS());
         VehicleState vehicleState = getVehicleState(a, vehicle);
         if(vehicleState == null){
             TerminalCommandHandler.getInstance().handleError(a, "Vozilo u nepoznatom stanju, greska u redu %d".formatted(counter));
@@ -67,6 +68,15 @@ public class VehicleDataSaver extends DataSaver<Vehicle> {
 
         vehicle.changeState(vehicleState);
         return vehicle;
+    }
+
+    private GPS getOfficeGPS() {
+
+       String gps = (String) TerminalCommandHandler.getInstance().getNewProperties().get("gps");
+       String[] gpsLocations = gps.split(",");
+       double lat = Double.parseDouble(gpsLocations[0].trim());
+       double lon = Double.parseDouble(gpsLocations[1].trim());
+       return new GPS(lat,lon);
     }
 
     private static VehicleState getVehicleState(String[] a, Vehicle vehicle) {

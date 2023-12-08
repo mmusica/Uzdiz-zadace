@@ -96,6 +96,12 @@ public class Paket implements Subject {
         }
         return basePrice;
     }
+    public int getNajveciKbrUlicePrimatelja(){
+        return this.primatelj.getUlica().getNajveciKbrUlice(primatelj.getUlica().getId());
+    }
+    public int getKbrPrimatelja(){
+        return this.primatelj.getKbr();
+    }
     public LocalDateTime getTimeOfReceival() {
         return vrijemePrijema;
     }
@@ -105,6 +111,9 @@ public class Paket implements Subject {
     }
     public Location getDestination() {
         return primatelj.getArea();
+    }
+    public Location getDestinationStreet() {
+        return primatelj.getUlica();
     }
 
     public String getOznaka() {

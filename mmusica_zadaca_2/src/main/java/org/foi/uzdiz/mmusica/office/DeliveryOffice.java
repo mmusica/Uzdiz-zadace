@@ -63,10 +63,10 @@ public class DeliveryOffice {
         return loadedPackages;
     }
 
-    private Location findLocation(Vehicle vehicle, List<Paket> urgentPackages) {
+    private Location findLocation(Vehicle vehicle, List<Paket> packages) {
         Location foundLocation = null;
         for (Location location : vehicle.getDeliveryArea()) {
-            for (Paket paket : urgentPackages) {
+            for (Paket paket : packages) {
                 if (paket.getDestination().equals(location)) {
                     foundLocation = location;
                     break;
@@ -100,11 +100,7 @@ public class DeliveryOffice {
         // ili je popunjeno minimalno 50% kapaciteta (težine ili prostora) kreće prema odredištima paketa.
         for (Vehicle vehicle : vehicles) {
             if (vehicle.isDriving()) vehicle.finalizeDeliveries();
-            if(isHourLater() && !vehicle.isDriving() && !vehicle.getPackages().isEmpty()) vehicle.startDeliveringPackages();
-//            if ((isVehicleCapacityFilled(vehicle) || isHourLaterWithUrgentPackage(vehicle)
-//                    || is50percentFull(vehicle)) && !vehicle.isDriving() && !vehicle.getPackages().isEmpty()) {
-//
-//            }
+            if(!vehicle.isDriving() && !vehicle.getPackages().isEmpty()) vehicle.startDeliveringPackages();
         }
         List<Vehicle> drivingVehicles = vehicles.stream().filter(Vehicle::isDriving).toList();
         vehicles.removeAll(drivingVehicles);

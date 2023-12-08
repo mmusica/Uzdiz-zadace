@@ -12,6 +12,7 @@ public class Person implements Observer {
     private Location ulica;
     private int kbr;
 
+    private boolean isAdmin = false;
     @Override
     public void update(Subject subject) {
         System.out.println(this.name + ": Paket --> " + subject.getStatus());
@@ -28,6 +29,14 @@ public class Person implements Observer {
     @Override
     public String getName() {
         return name;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public void setName(String name) {

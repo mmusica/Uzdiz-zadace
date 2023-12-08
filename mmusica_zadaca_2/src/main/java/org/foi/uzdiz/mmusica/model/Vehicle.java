@@ -1,10 +1,13 @@
 package org.foi.uzdiz.mmusica.model;
 
+import org.foi.uzdiz.mmusica.enums.TypeOfService;
 import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.model.state.BrokenVehicleState;
 import org.foi.uzdiz.mmusica.model.state.VehicleContext;
 import org.foi.uzdiz.mmusica.model.state.VehicleState;
 import org.foi.uzdiz.mmusica.visitor.DataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDisplay;
+import org.foi.uzdiz.mmusica.voznja.GPS;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,14 +25,19 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     private BigDecimal money;
     private List<Paket> packages;
     private boolean isDriving;
+    private LocalDateTime deliveryStarted;
+    private LocalDateTime vrijemePovratka;
     private LocalDateTime deliveryFinishedBy;
     private double currentlyLoadedWeight;
     private double getCurrentlyLoadedCapacity;
     private VehicleState vehicleState;
+    private GPS currentGPS;
+    private int brojIsporucenih;
+    private int brojVoznji = 0;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
-                   float prosjecnaBrzina, List<Location> deliveryArea) {
+                   float prosjecnaBrzina, List<Location> deliveryArea, GPS currentGPS) {
         this.registracija = registracija;
         this.opis = opis;
         this.kapacitetTezine = kapacitetTezine;
@@ -41,10 +49,30 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.currentlyLoadedWeight = 0;
         this.prosjecnaBrzina = prosjecnaBrzina;
         this.deliveryArea = deliveryArea;
+        this.currentGPS = currentGPS;
+    }
+
+    public String getUkupanBrojPaketaPoVrstiString(){
+        StringBuilder stringBuilder = new StringBuilder();
+        int brojacHitni = 0;
+        int brojacObicni = 0;
+        for(Paket p : this.getPackages()){
+            if(p.getUslugaDostave().equals(TypeOfService.H.toString())){
+                brojacHitni++;
+            }else{
+                brojacObicni++;
+            }
+        }
+        stringBuilder.append(brojacHitni).append(" HITNIH, ").append(brojacObicni).append(" NORMALNIH, ").append(this.brojIsporucenih).append(" DOSTAVLJENIH");
+        return  stringBuilder.toString();
     }
 
     @Override
     public void changeState(VehicleState vehicleState) {
+        if(this.vehicleState instanceof BrokenVehicleState){
+            System.out.println("Neispravno vozilo ne moze mijenjati stanje!");
+            return;
+        }
         this.vehicleState = vehicleState;
     }
     public void clearData(){
@@ -57,9 +85,31 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return this.vehicleState.loadPackageIntoVehicle(paket);
     }
 
+    public int getBrojIsporucenih() {
+        return brojIsporucenih;
+    }
+
+    public int getBrojVoznji() {
+        return brojVoznji;
+    }
+    public double getLoadedWeightPercentage(){
+        return currentlyLoadedWeight / kapacitetTezine;
+    }
+    public double getLoadedSpacePercentage(){
+        return getGetCurrentlyLoadedCapacity() / kapacitetProstora;
+    }
+    public void setBrojVoznji(int brojVoznji) {
+        this.brojVoznji = brojVoznji;
+    }
+
+    public void setBrojIsporucenih(int brojIsporucenih) {
+        this.brojIsporucenih = brojIsporucenih;
+    }
+
     public void startDeliveringPackages(){
         this.vehicleState.startDeliveringPackages();
     }
+
     public String getCroatianDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
@@ -67,6 +117,22 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     @Override
     public void accept(DataDisplayVisitor dataDisplayVisitor) {
         dataDisplayVisitor.visitVehicle(this);
+    }
+
+    public LocalDateTime getDeliveryStarted() {
+        return deliveryStarted;
+    }
+
+    public void setDeliveryStarted(LocalDateTime deliveryStarted) {
+        this.deliveryStarted = deliveryStarted;
+    }
+
+    public LocalDateTime getVrijemePovratka() {
+        return vrijemePovratka;
+    }
+
+    public void setVrijemePovratka(LocalDateTime vrijemePovratka) {
+        this.vrijemePovratka = vrijemePovratka;
     }
 
     public BigDecimal getMoney() {
@@ -176,4 +242,11 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return vehicleState;
     }
 
+    public GPS getCurrentGPS() {
+        return currentGPS;
+    }
+
+    public void setCurrentGPS(GPS currentGPS) {
+        this.currentGPS = currentGPS;
+    }
 }
