@@ -7,6 +7,7 @@ import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.observer.Subject;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Paket implements Subject {
     private List<Observer> observerList = new ArrayList<>();
     private String oznaka;
     private LocalDateTime vrijemePrijema;
-    private  Person posiljatelj;
+    private Person posiljatelj;
     private Person primatelj;
     private PackageType vrstaPaketa;
     private double visina;
@@ -36,9 +37,10 @@ public class Paket implements Subject {
 
     public Paket() {
     }
+
     @Override
     public void registerObserver(Observer observer) {
-        if(!observerList.contains(observer)) this.observerList.add(observer);
+        if (!observerList.contains(observer)) this.observerList.add(observer);
     }
 
     @Override
@@ -50,6 +52,7 @@ public class Paket implements Subject {
     public void notifyObservers() {
         observerList.forEach(observer -> observer.update(this));
     }
+
     @Override
     public void setStatusIsporuke(String statusIsporuke) {
         this.statusIsporuke = statusIsporuke;
@@ -71,47 +74,54 @@ public class Paket implements Subject {
         return packageSize;
     }
 
-    public BigDecimal calculatePrice(){
+    public BigDecimal calculatePrice() {
         BigDecimal basePrice = new BigDecimal(0);
-        if(uslugaDostave.equals(TypeOfService.P.toString())){
+        if (uslugaDostave.equals(TypeOfService.P.toString())) {
             return basePrice;
         }
-        if(!uslugaDostave.equals(TypeOfService.H.toString())){
+        if (!uslugaDostave.equals(TypeOfService.H.toString())) {
             basePrice = vrstaPaketa.getCijena();
-        }else {
+        } else {
             basePrice = vrstaPaketa.getCijenaHitno();
         }
-        if(vrstaPaketa.getOznaka().equals(TypeOfPackage.X.toString())){
-            BigDecimal p = vrstaPaketa.getCijenaP().multiply(BigDecimal.valueOf(visina*sirina*duzina));
+        if (vrstaPaketa.getOznaka().equals(TypeOfPackage.X.toString())) {
+            BigDecimal p = vrstaPaketa.getCijenaP().multiply(BigDecimal.valueOf(visina * sirina * duzina));
             BigDecimal t = vrstaPaketa.getCijenaT().multiply(BigDecimal.valueOf(tezina));
             basePrice = basePrice.add(p).add(t);
 
         }
         return basePrice;
     }
-    public BigDecimal getVehiclePrice(){
+
+    public BigDecimal getVehiclePrice() {
         BigDecimal basePrice = new BigDecimal(0);
-        if(uslugaDostave.equals(TypeOfService.P.toString())){
+        if (uslugaDostave.equals(TypeOfService.P.toString())) {
             basePrice = basePrice.add(iznosPouzeca);
         }
         return basePrice;
     }
-    public int getNajveciKbrUlicePrimatelja(){
+
+    public int getNajveciKbrUlicePrimatelja() {
         return this.primatelj.getUlica().getNajveciKbrUlice(primatelj.getUlica().getId());
     }
-    public int getKbrPrimatelja(){
+
+    public int getKbrPrimatelja() {
         return this.primatelj.getKbr();
     }
+
     public LocalDateTime getTimeOfReceival() {
         return vrijemePrijema;
     }
-    private String getCroatianDate(LocalDateTime dateTime){
+
+    private String getCroatianDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
     }
+
     public Location getDestination() {
         return primatelj.getArea();
     }
+
     public Location getDestinationStreet() {
         return primatelj.getUlica();
     }
@@ -256,17 +266,10 @@ public class Paket implements Subject {
     public void setErrored(boolean errored) {
         isErrored = errored;
     }
-        @Override
-    public String toString() {
-        return "Paket{" +
-                "oznaka='" + oznaka + '\'' +
-                ", vrijemePrijema=" + getCroatianDate(vrijemePrijema) +
-                ", vrstaPaketa=" + vrstaPaketa.getOznaka() +
-                ", vrsta usluge=" + uslugaDostave +
-                ", iznosPouzeca=" + calculatePrice() +
-                ", iznosDostave=" + getVehiclePrice() +
-                ", statusIsporuke='" + statusIsporuke + '\'' + '\n' +
-                ", vrijemePreuzimanja=" + getCroatianDate(vrijemePreuzimanja) +
-                '}';
+
+    public void soutPackage() {
+        DecimalFormat df = new DecimalFormat("#,###.00");
+
+        System.out.printf("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", vrstaPaketa.getOznaka(), uslugaDostave, oznaka, df.format(calculatePrice()), df.format(getVehiclePrice()), statusIsporuke, getCroatianDate(vrijemePrijema), getCroatianDate(vrijemePreuzimanja));
     }
 }

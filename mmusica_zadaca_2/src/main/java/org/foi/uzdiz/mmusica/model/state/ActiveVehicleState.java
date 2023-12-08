@@ -26,7 +26,7 @@ public class ActiveVehicleState implements VehicleState {
             //
             int i1 = vehicle.getBrojVoznji() + 1;
             vehicle.setBrojVoznji(i1);
-            AtomicInteger i = new AtomicInteger(1);
+            AtomicInteger i = new AtomicInteger(vehicle.getBrojIsporucenih());
             //
             this.vehicle.getPackages().forEach(paket -> {
                 paket.setBeingDelivered(false);
@@ -34,8 +34,9 @@ public class ActiveVehicleState implements VehicleState {
                 this.vehicle.setMoney(this.vehicle.getMoney().add(paket.getVehiclePrice()));
                 paket.setStatusIsporuke("Dostavljen");
                 //
-                this.vehicle.setBrojIsporucenih(i.getAndIncrement());
+                i.getAndIncrement();
             });
+            this.vehicle.setBrojIsporucenih(i.get());
             this.clearData();
         }
     }

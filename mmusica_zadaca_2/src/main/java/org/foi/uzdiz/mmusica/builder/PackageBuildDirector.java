@@ -33,7 +33,7 @@ public class PackageBuildDirector {
     }
     public Paket constructPackage(String[] a){
         List<Observer> observerList = getObserverList(a);
-        boolean isErrored = (long) observerList.size() !=2;
+        boolean isErrored = primateljDoesNotExist(a[PRIMATELJ]);
         return packageBuilder.oznaka(a[OZNAKA])
                 .vrijemePrijema(getVrijemePrijema(a[VRIJEME_PRIJEMA]))
                 .posiljatelj(findPerson(a[POSILJATELJ]))
@@ -54,6 +54,10 @@ public class PackageBuildDirector {
                 .build();
     }
 
+    private boolean primateljDoesNotExist(String s) {
+        return personRepository.find(s) == null;
+    }
+
     private Person findPerson(String s) {
        return RepositoryManager.getINSTANCE().getPersonRepository().find(s);
     }
@@ -63,14 +67,10 @@ public class PackageBuildDirector {
         Observer posiljatelj = personRepository.find(a[POSILJATELJ]);
         List<Observer> observerList = new ArrayList<>();
         if (primatelj == null) {
-            TerminalCommandHandler.getInstance().handleError(a, "Ovakav primatelj ne postoji %s".formatted(a[PRIMATELJ]));
+            TerminalCommandHandler.getInstance().handleError(a, "Ovakav primatelj ne postoji %s, ili mu je adresa neispravna u ranijim provjerama".formatted(a[PRIMATELJ]));
+
         }  else{
             observerList.add(primatelj);
-        }
-        if (posiljatelj == null)
-            TerminalCommandHandler.getInstance().handleError(a, "Ovakav posiljatelj ne postoji %s".formatted(a[POSILJATELJ]));
-        else {
-            observerList.add(posiljatelj);
         }
         return observerList;
     }

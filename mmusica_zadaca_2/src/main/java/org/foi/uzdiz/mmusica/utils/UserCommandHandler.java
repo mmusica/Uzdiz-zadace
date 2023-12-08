@@ -104,7 +104,7 @@ public class UserCommandHandler {
                 Person personFromAdminCommand = getPersonFromAdminCommand(commandArray);
                 if (personFromAdminCommand != null) {
                     personFromAdminCommand.setAdmin(true);
-                }else{
+                } else {
                     System.out.println("Osoba ne postoji");
                 }
                 break;
@@ -113,7 +113,7 @@ public class UserCommandHandler {
                 Person personFromProxyCommand = getPersonFromAdminCommand(commandArray);
                 if (personFromProxyCommand != null) {
                     subscribeToAllPackages(personFromProxyCommand);
-                }else{
+                } else {
                     System.out.println("Osoba ne postoji");
                 }
                 break;
@@ -123,7 +123,7 @@ public class UserCommandHandler {
                 Person personFromProxyCommand = getPersonFromAdminCommand(commandArray);
                 if (personFromProxyCommand != null) {
                     unsubscribeToAllPackages(personFromProxyCommand);
-                }else{
+                } else {
                     System.out.println("Osoba ne postoji");
                 }
                 break;
@@ -178,6 +178,7 @@ public class UserCommandHandler {
     }
 
     private void handleVoznjeVozila(String[] commandArray) {
+        System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
         System.out.printf("%-25s | %-25s | %-12s | %-20s | %-12s%n", "VRIJEME POC", "VRIJEME POVR", "TRAJANJE", "UKUPNO KM", "BROJ PAKETA U VOZILU");
         Vehicle vehicle = RepositoryManager.getINSTANCE().getVehicleRepository().find(commandArray[1]);
         if (vehicle == null) {
@@ -188,7 +189,8 @@ public class UserCommandHandler {
     }
 
     private void handleStatusVozila() {
-        System.out.printf("%-15s | %-15s | %-20s | %-12s | %-12s %n", "STATUS", "UKUPNO KM", "ZAUZETOST", "BROJ VOZNJI", "BROJ PAKETA");
+        System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
+        System.out.printf("%-15s | %-15s | %-20s | %-12s | %-12s %n", "STATUS", "UKUPNO KM", "ZAUZETOST(%)", "BROJ VOZNJI", "BROJ PAKETA");
         RepositoryManager.getINSTANCE().getVehicleRepository()
                 .getAll()
                 .forEach(vehicle -> vehicle.accept(new VehicleDataDisplayVisitor()));
@@ -245,12 +247,15 @@ public class UserCommandHandler {
         System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
 
         System.out.println("\nPrimljeni");
+        System.out.printf("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", "VRSTA", "USLUGA", "OZNAKA", "DOSTAVA", "POUZECE (V)", "STATUS", "VRIJEME PRIJEMA", "VRIJEME PREUZIMANJA");
         List<Paket> all = RepositoryManager.getINSTANCE().getPackageRepository().getAll();
         List<Paket> primljeniPaketi = all.stream().filter(paket -> paket.isReceived() && !paket.isDelivered()).toList();
         List<Paket> dostavljeniPaketi = all.stream().filter(Paket::isDelivered).toList();
-        primljeniPaketi.forEach(System.out::println);
+        primljeniPaketi.forEach(Paket::soutPackage);
         System.out.println("\nDostavljeni");
-        dostavljeniPaketi.forEach(System.out::println);
+        System.out.printf("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", "VRSTA", "USLUGA", "OZNAKA", "DOSTAVA", "POUZECE", "STATUS", "VRIJEME PRIJEMA", "VRIJEME PREUZIMANJA");
+
+        dostavljeniPaketi.forEach(Paket::soutPackage);
     }
 
     private boolean isVirtualnoVrijemeValid(String[] commandArray) {

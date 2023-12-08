@@ -42,7 +42,7 @@ public class DeliveryOffice {
     private List<Paket> getLoadedPackages(Vehicle vehicle, List<Paket> urgentPackages, List<Paket> normalPackages) {
         List<Paket> loadedPackages = new ArrayList<>();
         Location foundLocation = findLocation(vehicle, urgentPackages);
-        if (foundLocation == null) foundLocation = findLocation(vehicle, loadedPackages);
+        if (foundLocation == null) foundLocation = findLocation(vehicle, normalPackages);
         if (foundLocation != null) {
             for (Paket paket : urgentPackages) {
                 if (paket.getDestination().equals(foundLocation)) {

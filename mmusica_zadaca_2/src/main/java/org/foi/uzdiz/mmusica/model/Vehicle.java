@@ -33,7 +33,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     private VehicleState vehicleState;
     private GPS currentGPS;
     private int brojIsporucenih;
-    private int brojVoznji = 0;
+    private int brojVoznji;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
@@ -50,37 +50,42 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.prosjecnaBrzina = prosjecnaBrzina;
         this.deliveryArea = deliveryArea;
         this.currentGPS = currentGPS;
+        this.brojVoznji = 0;
+        this.brojIsporucenih = 0;
     }
 
-    public String getUkupanBrojPaketaPoVrstiString(){
+    public String getUkupanBrojPaketaPoVrstiString() {
         StringBuilder stringBuilder = new StringBuilder();
         int brojacHitni = 0;
         int brojacObicni = 0;
-        for(Paket p : this.getPackages()){
-            if(p.getUslugaDostave().equals(TypeOfService.H.toString())){
+        for (Paket p : this.getPackages()) {
+            if (p.getUslugaDostave().equals(TypeOfService.H.toString())) {
                 brojacHitni++;
-            }else{
+            } else {
                 brojacObicni++;
             }
         }
         stringBuilder.append(brojacHitni).append(" HITNIH, ").append(brojacObicni).append(" NORMALNIH, ").append(this.brojIsporucenih).append(" DOSTAVLJENIH");
-        return  stringBuilder.toString();
+        return stringBuilder.toString();
     }
 
     @Override
     public void changeState(VehicleState vehicleState) {
-        if(this.vehicleState instanceof BrokenVehicleState){
+        if (this.vehicleState instanceof BrokenVehicleState) {
             System.out.println("Neispravno vozilo ne moze mijenjati stanje!");
             return;
         }
         this.vehicleState = vehicleState;
     }
-    public void clearData(){
+
+    public void clearData() {
         this.vehicleState.clearData();
     }
+
     public void finalizeDeliveries() {
         this.vehicleState.finalizeDeliveries();
     }
+
     public Paket loadPackageIntoVehicle(Paket paket) {
         return this.vehicleState.loadPackageIntoVehicle(paket);
     }
@@ -92,12 +97,15 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     public int getBrojVoznji() {
         return brojVoznji;
     }
-    public double getLoadedWeightPercentage(){
+
+    public double getLoadedWeightPercentage() {
         return currentlyLoadedWeight / kapacitetTezine;
     }
-    public double getLoadedSpacePercentage(){
+
+    public double getLoadedSpacePercentage() {
         return getGetCurrentlyLoadedCapacity() / kapacitetProstora;
     }
+
     public void setBrojVoznji(int brojVoznji) {
         this.brojVoznji = brojVoznji;
     }
@@ -106,7 +114,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.brojIsporucenih = brojIsporucenih;
     }
 
-    public void startDeliveringPackages(){
+    public void startDeliveringPackages() {
         this.vehicleState.startDeliveringPackages();
     }
 
@@ -114,6 +122,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);
     }
+
     @Override
     public void accept(DataDisplayVisitor dataDisplayVisitor) {
         dataDisplayVisitor.visitVehicle(this);
@@ -138,6 +147,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     public BigDecimal getMoney() {
         return money;
     }
+
     public void setMoney(BigDecimal money) {
         this.money = money;
     }
