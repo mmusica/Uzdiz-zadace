@@ -72,6 +72,10 @@ public class PackageBuildDirector {
         }  else{
             observerList.add(primatelj);
         }
+
+        if(posiljatelj != null){
+            observerList.add(posiljatelj);
+        }
         return observerList;
     }
 
