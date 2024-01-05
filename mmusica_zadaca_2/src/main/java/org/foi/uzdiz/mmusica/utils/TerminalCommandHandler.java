@@ -1,5 +1,7 @@
 package org.foi.uzdiz.mmusica.utils;
 
+import org.foi.uzdiz.mmusica.voznja.GPS;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -57,6 +59,13 @@ public class TerminalCommandHandler {
         return INSTANCE.getVirtualniSat().format(formatter);
     }
 
+    public GPS getOfficeGps(){
+        String gps = (String) this.getNewProperties().get("gps");
+        String[] latLon = gps.split(",");
+        double lat = Double.parseDouble(latLon[0].trim());
+        double lon = Double.parseDouble(latLon[1].trim());
+        return new GPS(lat,lon);
+    }
     public static TerminalCommandHandler getInstance() {
         return INSTANCE;
     }

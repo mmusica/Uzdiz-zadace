@@ -8,10 +8,12 @@ import org.foi.uzdiz.mmusica.model.state.VehicleState;
 import org.foi.uzdiz.mmusica.visitor.DataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDisplay;
 import org.foi.uzdiz.mmusica.voznja.GPS;
+import org.foi.uzdiz.mmusica.voznja.Drive;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Vehicle implements VehicleContext, VehicleDisplay {
@@ -32,8 +34,11 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     private double getCurrentlyLoadedCapacity;
     private VehicleState vehicleState;
     private GPS currentGPS;
+    //
     private int brojIsporucenih;
     private int brojVoznji;
+    //
+    private List<Drive> drives;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
                    double kapacitetProstora, int redoslijed, BigDecimal money, List<Paket> packages,
@@ -52,6 +57,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.currentGPS = currentGPS;
         this.brojVoznji = 0;
         this.brojIsporucenih = 0;
+        this.drives = new ArrayList<>();
     }
 
     public String getUkupanBrojPaketaPoVrstiString() {
@@ -258,5 +264,17 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
 
     public void setCurrentGPS(GPS currentGPS) {
         this.currentGPS = currentGPS;
+    }
+
+    public void setVehicleState(VehicleState vehicleState) {
+        this.vehicleState = vehicleState;
+    }
+
+    public List<Drive> getDrives() {
+        return drives;
+    }
+
+    public void setDrives(List<Drive> drives) {
+        this.drives = drives;
     }
 }

@@ -58,7 +58,7 @@ public class DeliveryOffice {
             }
         }
 //        Paket loadedPackage = vehicle.loadPackageIntoVehicle(paket);
-//        if (loadedPackage != null) loadedPackages.add(loadedPackage);
+//        if (loadedPackage != null) loadedPackages.add(loadedPackag
 
         return loadedPackages;
     }
@@ -93,11 +93,7 @@ public class DeliveryOffice {
         return allUrgentPackages;
     }
 
-
     public void deliverPackages() {
-        //Nakon što se popuni kapacitet vozila
-        // ili nakon punog sata vozilo koje ima barem jedan ukrcani paket hitne dostave
-        // ili je popunjeno minimalno 50% kapaciteta (težine ili prostora) kreće prema odredištima paketa.
         for (Vehicle vehicle : vehicles) {
             if (vehicle.isDriving()) vehicle.finalizeDeliveries();
             if(!vehicle.isDriving() && !vehicle.getPackages().isEmpty()) vehicle.startDeliveringPackages();
@@ -111,32 +107,6 @@ public class DeliveryOffice {
             fullHourPassed = fullHourPassed.plusHours(1);
         }
     }
-
-    private boolean is50percentFull(Vehicle vehicle) {
-        double halfWeight = vehicle.getKapacitetTezine() / 2;
-        double halfCapacity = vehicle.getKapacitetProstora() / 2;
-        return vehicle.getGetCurrentlyLoadedCapacity() >= halfCapacity || vehicle.getCurrentlyLoadedWeight() >= halfWeight;
-    }
-
-    private boolean isHourLaterWithUrgentPackage(Vehicle vehicle) {
-        LocalDateTime currentHourTime = TerminalCommandHandler.getInstance().getVirtualniSat();
-        List<Paket> list = vehicle.getPackages().stream().filter(paket -> paket.getUslugaDostave().equals(TypeOfService.H.toString())).toList();
-        if (currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime)) {
-            return !list.isEmpty();
-        }
-        return false;
-    }
-    private boolean isHourLater() {
-        LocalDateTime currentHourTime = TerminalCommandHandler.getInstance().getVirtualniSat();
-        return currentHourTime.isEqual(fullHourPassed) || fullHourPassed.isBefore(currentHourTime);
-
-    }
-
-    private boolean isVehicleCapacityFilled(Vehicle vehicle) {
-        return vehicle.getCurrentlyLoadedWeight() == vehicle.getKapacitetTezine() &&
-                vehicle.getGetCurrentlyLoadedCapacity() == vehicle.getKapacitetProstora();
-    }
-
     private boolean isUrgent(Paket paket) {
         return paket.getUslugaDostave().equals(TypeOfService.H.toString());
     }

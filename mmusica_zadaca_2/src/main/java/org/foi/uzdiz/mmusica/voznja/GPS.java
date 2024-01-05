@@ -24,11 +24,16 @@ public class GPS {
     public void setLon(double lon) {
         this.lon = lon;
     }
-    public static double distance(GPS from, GPS to){
+
+    public static double distance(GPS from, GPS to) {
         double x1 = from.getLat();
         double x2 = to.getLat();
         double y1 = from.getLon();
-        double y2 = from.getLon();
-        return Math.sqrt((y2 - y1) * (y2 - y1) + (x2 - x1) * (x2 - x1));
+        double y2 = to.getLon();
+        return Math.sqrt(Math.pow(y2 - y1, 2) + Math.pow(x2 - x1, 2));
+    }
+
+    public boolean equals(GPS gps) {
+        return gps.lat == this.lat && gps.lon == this.lon;
     }
 }
