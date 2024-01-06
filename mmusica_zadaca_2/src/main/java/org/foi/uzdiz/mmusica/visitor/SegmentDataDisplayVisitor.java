@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 public class SegmentDataDisplayVisitor implements DataDisplayVisitor {
 
-    private int index;
+    private final int index;
 
     public SegmentDataDisplayVisitor(int index) {
         this.index = index - 1;
