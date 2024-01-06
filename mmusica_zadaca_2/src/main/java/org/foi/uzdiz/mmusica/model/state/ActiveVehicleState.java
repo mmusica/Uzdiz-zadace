@@ -206,7 +206,6 @@ public class ActiveVehicleState implements VehicleState {
         double lon2 = endOfStreet.getLon();
 
         double a = Math.abs(Math.max(lon2, lon1) - Math.min(lon2, lon1));
-//        double b = Math.abs(Math.max(lat2, lat1) - Math.min(lat2, lat1));
         double sinAlpha = a / duljinaUlice;
 
         double aManji = duljinaDoKuce * sinAlpha;

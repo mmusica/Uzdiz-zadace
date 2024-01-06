@@ -14,6 +14,7 @@ import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.visitor.DrivesDataDisplayVisitor;
+import org.foi.uzdiz.mmusica.visitor.SegmentDataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDataDisplayVisitor;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class UserCommandHandler {
     private static final int VEHICLE_STATE = 2;
     private static final String VOZNJE_VOZILA = "VV";
     private static final String STATUS_VOZILA = "SV";
+    public static final String VOZNJE_SEGMENTA = "VS";
     private final ReceptionOffice receptionOffice = new ReceptionOffice();
     final String regexPo = "^PO '(.+)' \\S+ [ND]$";
     final String regexPs = "^PS\\s[^\\s]+(?:\\sA|\\sNI|\\sNA)$";
@@ -72,6 +74,14 @@ public class UserCommandHandler {
                     break;
                 }
                 handleVoznjeVozila(commandArray);
+                break;
+            }
+            case VOZNJE_SEGMENTA: {
+                if (commandArray.length != 3) {
+                    System.out.println("Krivi broj argumenata");
+                    break;
+                }
+                handleVoznjeSegmenta(commandArray);
                 break;
             }
             case QUIT: {
@@ -130,6 +140,19 @@ public class UserCommandHandler {
             }
         }
         return SUCCESS_RESPONSE;
+    }
+
+    private void handleVoznjeSegmenta(String[] commandArray) {
+
+        System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
+        System.out.printf("%-25s | %-25s | %-20s | %-20s | %-12s%n", "VRIJEME POC", "VRIJEME POVR", "TRAJANJE", "UKUPNO KM", "OZNAKA PAKETA");
+        Vehicle vehicle = RepositoryManager.getINSTANCE().getVehicleRepository().find(commandArray[1]);
+        if (vehicle == null) {
+            System.out.println("Ovakvo vozilo ne postoji");
+            return;
+        }
+        int index = Integer.parseInt(commandArray[2]);
+        vehicle.accept(new SegmentDataDisplayVisitor(index));
     }
 
     private void unsubscribeToAllPackages(Person personFromProxyCommand) {
