@@ -24,6 +24,7 @@ public class ReceptionOffice {
         LocalTime nextHour = TerminalCommandHandler.getInstance().getVirtualniSat().plusHours(1).toLocalTime();
         while (true) {
 
+            Logger.getGlobal().log(Level.INFO, "ISPIS VIRTUALNOG SATA: " + TerminalCommandHandler.getInstance().getCroDateString());
             deliveryOffice.deliverPackages();
             if(isFullHourAndNotOriginaltime(TerminalCommandHandler.getInstance().getVirtualniSat(), originalTime, nextHour)){
                 nextHour = TerminalCommandHandler.getInstance().getVirtualniSat().plusHours(1).toLocalTime();
@@ -35,7 +36,6 @@ public class ReceptionOffice {
 
 
             if (isDone(timeToIncrement, originalTime)) break;
-            Logger.getGlobal().log(Level.INFO, "ISPIS VIRTUALNOG SATA: " + TerminalCommandHandler.getInstance().getCroDateString());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {

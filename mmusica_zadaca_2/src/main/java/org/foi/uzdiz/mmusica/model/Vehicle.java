@@ -27,17 +27,12 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     private BigDecimal money;
     private List<Paket> packages;
     private boolean isDriving;
-    private LocalDateTime deliveryStarted;
-    private LocalDateTime vrijemePovratka;
     private LocalDateTime deliveryFinishedBy;
     private double currentlyLoadedWeight;
-    private double getCurrentlyLoadedCapacity;
+    private double currentlyLoadedCapacity;
     private VehicleState vehicleState;
     private GPS currentGPS;
-    //
     private int brojIsporucenih;
-    private int brojVoznji;
-    //
     private List<Drive> drives;
 
     public Vehicle(String registracija, String opis, double kapacitetTezine,
@@ -50,12 +45,11 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.redoslijed = redoslijed;
         this.money = money;
         this.packages = packages;
-        this.getCurrentlyLoadedCapacity = 0;
+        this.currentlyLoadedCapacity = 0;
         this.currentlyLoadedWeight = 0;
         this.prosjecnaBrzina = prosjecnaBrzina;
         this.deliveryArea = deliveryArea;
         this.currentGPS = currentGPS;
-        this.brojVoznji = 0;
         this.brojIsporucenih = 0;
         this.drives = new ArrayList<>();
     }
@@ -100,20 +94,13 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return brojIsporucenih;
     }
 
-    public int getBrojVoznji() {
-        return brojVoznji;
-    }
 
     public double getLoadedWeightPercentage() {
         return currentlyLoadedWeight / kapacitetTezine;
     }
 
     public double getLoadedSpacePercentage() {
-        return getGetCurrentlyLoadedCapacity() / kapacitetProstora;
-    }
-
-    public void setBrojVoznji(int brojVoznji) {
-        this.brojVoznji = brojVoznji;
+        return getCurrentlyLoadedCapacity() / kapacitetProstora;
     }
 
     public void setBrojIsporucenih(int brojIsporucenih) {
@@ -132,22 +119,6 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     @Override
     public void accept(DataDisplayVisitor dataDisplayVisitor) {
         dataDisplayVisitor.visitVehicle(this);
-    }
-
-    public LocalDateTime getDeliveryStarted() {
-        return deliveryStarted;
-    }
-
-    public void setDeliveryStarted(LocalDateTime deliveryStarted) {
-        this.deliveryStarted = deliveryStarted;
-    }
-
-    public LocalDateTime getVrijemePovratka() {
-        return vrijemePovratka;
-    }
-
-    public void setVrijemePovratka(LocalDateTime vrijemePovratka) {
-        this.vrijemePovratka = vrijemePovratka;
     }
 
     public BigDecimal getMoney() {
@@ -230,12 +201,12 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.currentlyLoadedWeight = currentlyLoadedWeight;
     }
 
-    public double getGetCurrentlyLoadedCapacity() {
-        return getCurrentlyLoadedCapacity;
+    public double getCurrentlyLoadedCapacity() {
+        return currentlyLoadedCapacity;
     }
 
-    public void setGetCurrentlyLoadedCapacity(double getCurrentlyLoadedCapacity) {
-        this.getCurrentlyLoadedCapacity = getCurrentlyLoadedCapacity;
+    public void setCurrentlyLoadedCapacity(double getCurrentlyLoadedCapacity) {
+        this.currentlyLoadedCapacity = getCurrentlyLoadedCapacity;
     }
 
     public float getProsjecnaBrzina() {
@@ -277,4 +248,13 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     public void setDrives(List<Drive> drives) {
         this.drives = drives;
     }
+
+    public double getAllDrivesDistance() {
+        double totalDistance = 0;
+        for (Drive drive : drives) {
+            totalDistance += drive.getDistance();
+        }
+        return totalDistance;
+    }
+
 }

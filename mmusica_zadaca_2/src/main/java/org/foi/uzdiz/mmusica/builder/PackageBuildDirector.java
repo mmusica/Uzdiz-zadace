@@ -51,6 +51,7 @@ public class PackageBuildDirector {
                 .isDelivered(false)
                 .observerList(observerList)
                 .isErrored(isErrored)
+                .isLoaded(false)
                 .build();
     }
 

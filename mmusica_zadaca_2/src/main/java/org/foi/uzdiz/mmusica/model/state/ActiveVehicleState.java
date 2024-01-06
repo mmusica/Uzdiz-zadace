@@ -9,10 +9,8 @@ import org.foi.uzdiz.mmusica.voznja.GPS;
 import org.foi.uzdiz.mmusica.voznja.Segment;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ActiveVehicleState implements VehicleState {
     private final Vehicle vehicle;
@@ -27,8 +25,6 @@ public class ActiveVehicleState implements VehicleState {
         LocalDateTime currentTime = TerminalCommandHandler.getInstance().getVirtualniSat();
         if (this.vehicle.isDriving() && (this.vehicle.getDeliveryFinishedBy().isEqual(currentTime)
                 || this.vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
-            System.out.printf("ZAVRSENA DOSTAVA vozila %s u virtualno vrijeme: %s%n",
-                    this.vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
 
 
             deliverPackage(currentTime);
@@ -46,15 +42,19 @@ public class ActiveVehicleState implements VehicleState {
 
         var trenutnoVrijeme = TerminalCommandHandler.getInstance().getVirtualniSat().plusSeconds(0);
         GPS destinationGPS = TerminalCommandHandler.getInstance().getOfficeGps();
-        double udaljenostDoKuce = GPS.distance(this.vehicle.getCurrentGPS(), destinationGPS);
-        long time = (long) (udaljenostDoKuce / vehicle.getProsjecnaBrzina());
-        LocalDateTime finishTime = trenutnoVrijeme.plusHours(time);
+        double udaljenostDoKuce = GPS.distanceInKM(this.vehicle.getCurrentGPS(), destinationGPS);
+        double calcTime = (udaljenostDoKuce / this.vehicle.getProsjecnaBrzina()) * 60;
+        long minutes = (long) calcTime;
+        long seconds = (long) ((calcTime - minutes) * 60);
+        //vrijeme zavrsetka je trenutno plus kolko treba da dode do kuce plus vrijeme isporuke --vi u min
+        LocalDateTime finishTime = trenutnoVrijeme.plusMinutes(minutes).plusSeconds(seconds);
+        this.vehicle.setDeliveryFinishedBy(finishTime);
         this.vehicle.setDeliveryFinishedBy(finishTime);
 
         List<Drive> drives = this.vehicle.getDrives();
         Drive drive = drives.get(drives.size() - 1);
         drive.getSegments().add(new Segment(this.vehicle.getCurrentGPS(), destinationGPS, udaljenostDoKuce,
-                trenutnoVrijeme, finishTime, time, 0, null));
+                trenutnoVrijeme, finishTime, calcTime, 0, null));
         //myb refactor
         this.vehicle.setCurrentGPS(destinationGPS);
     }
@@ -67,12 +67,12 @@ public class ActiveVehicleState implements VehicleState {
     @Override
     public Paket loadPackageIntoVehicle(Paket paket) {
         if (hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket)
-                && !paket.isBeingDelivered() && !paket.isErrored()) {
+                && !paket.isLoaded() && !paket.isErrored()) {
 
-            this.vehicle.setGetCurrentlyLoadedCapacity(this.vehicle.getGetCurrentlyLoadedCapacity() + paket.calculatePackageSize());
+            this.vehicle.setCurrentlyLoadedCapacity(this.vehicle.getCurrentlyLoadedCapacity() + paket.calculatePackageSize());
             this.vehicle.setCurrentlyLoadedWeight(this.vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
 
-            //paket.setBeingDelivered(true);
+            paket.setLoaded(true);
             System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n",
                     TerminalCommandHandler.getInstance().getCroDateString(), paket.getOznaka(), paket.getUslugaDostave(),
                     vehicle.getOpis());
@@ -93,11 +93,7 @@ public class ActiveVehicleState implements VehicleState {
         if (vehicle.getCurrentGPS().equals(officeGPs)) {
             this.vehicle.getDrives().add(new Drive());
         }
-        //
         var trenutnoVrijeme = TerminalCommandHandler.getInstance().getVirtualniSat().plusSeconds(0);
-        this.vehicle.setDeliveryStarted(trenutnoVrijeme);
-        this.vehicle.setVrijemePovratka(null);
-        //
         //po prosjecnoj brzini i ukupnim putevima izracunamo kad bude gotovo
 
         deliverPackage(trenutnoVrijeme);
@@ -113,8 +109,12 @@ public class ActiveVehicleState implements VehicleState {
             paket.setBeingDelivered(false);
             paket.setDelivered(true);
             this.vehicle.setMoney(this.vehicle.getMoney().add(paket.getVehiclePrice()));
-            paket.setStatusIsporuke("Dostavljen");
 
+            System.out.printf("ZAVRSENA DOSTAVA paketa u vozilu %s u virtualno vrijeme: %s%n",
+                    this.vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
+            paket.setStatusIsporuke("Dostavljen");
+            unloadPackage(paket);
+            this.vehicle.setBrojIsporucenih(this.vehicle.getBrojIsporucenih()+1);
             GPS destinationGPS = getDestinationGPS(paket);
             this.vehicle.setCurrentGPS(destinationGPS);
         });
@@ -126,28 +126,40 @@ public class ActiveVehicleState implements VehicleState {
         paketi.stream().findFirst().ifPresent(paket -> {
             paket.setBeingDelivered(true);
             GPS destinationGPS = getDestinationGPS(paket);
-            double udaljenostDoKuce = GPS.distance(this.vehicle.getCurrentGPS(), destinationGPS);
-            long time = (long) (udaljenostDoKuce / vehicle.getProsjecnaBrzina());
+            double udaljenostDoKuce = GPS.distanceInKM(this.vehicle.getCurrentGPS(), destinationGPS);
+            double calcTime = (udaljenostDoKuce / this.vehicle.getProsjecnaBrzina()) * 60;
+            long minutes = (long) calcTime;
+            long seconds = (long) ((calcTime - minutes) * 60);
             //vrijeme zavrsetka je trenutno plus kolko treba da dode do kuce plus vrijeme isporuke --vi u min
             int vrijemeIsporuke = TerminalCommandHandler.getInstance().getVrijemeIsporuke();
-            LocalDateTime finishTime = trenutnoVrijeme.plusHours(time)
+            LocalDateTime finishTime = trenutnoVrijeme.plusMinutes(minutes).plusSeconds(seconds)
                     .plusMinutes(vrijemeIsporuke);
             this.vehicle.setDeliveryFinishedBy(finishTime);
             paket.setStatusIsporuke("Trenutno u isporuci");
 
             List<Drive> drives = this.vehicle.getDrives();
             Drive drive = drives.get(drives.size() - 1);
-            drive.getSegments().add(new Segment(this.vehicle.getCurrentGPS(), destinationGPS, udaljenostDoKuce,
-                    trenutnoVrijeme, finishTime, time, vrijemeIsporuke, paket));
-
+            Segment newSegment = new Segment(this.vehicle.getCurrentGPS(), destinationGPS, udaljenostDoKuce,
+                    trenutnoVrijeme, finishTime, calcTime, vrijemeIsporuke, paket);
+            drive.getSegments().add(newSegment);
         });
+    }
+
+    private void unloadPackage(Paket paket) {
+        double currentlyLoadedWeight = this.vehicle.getCurrentlyLoadedWeight();
+        double getCurrentlyLoadedCapacity = this.vehicle.getCurrentlyLoadedCapacity();
+
+        this.vehicle.setCurrentlyLoadedWeight(currentlyLoadedWeight - paket.getTezina());
+        this.vehicle.setCurrentlyLoadedCapacity(getCurrentlyLoadedCapacity - paket.calculatePackageSize());
     }
 
     @Override
     public void clearData() {
+        System.out.printf("VOZILO %s SE VRATILO U URED u virtualno vrijeme: %s%n",
+                this.vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
         this.vehicle.getPackages().clear();
         this.vehicle.setCurrentlyLoadedWeight(0);
-        this.vehicle.setGetCurrentlyLoadedCapacity(0);
+        this.vehicle.setCurrentlyLoadedCapacity(0);
         this.vehicle.setDriving(false);
         this.vehicle.setDeliveryFinishedBy(null);
     }
@@ -206,7 +218,7 @@ public class ActiveVehicleState implements VehicleState {
     }
 
     private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
-        double capacity = vehicle.getKapacitetProstora() - vehicle.getGetCurrentlyLoadedCapacity();
+        double capacity = vehicle.getKapacitetProstora() - vehicle.getCurrentlyLoadedCapacity();
         double packageSize = paket.calculatePackageSize();
         return packageSize <= capacity;
     }

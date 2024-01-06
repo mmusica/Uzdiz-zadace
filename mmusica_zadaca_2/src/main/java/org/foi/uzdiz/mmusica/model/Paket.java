@@ -33,6 +33,7 @@ public class Paket implements Subject {
     private boolean isReceived;
     private boolean isBeingDelivered;
     private boolean isDelivered;
+    private boolean isLoaded;
     private boolean isErrored;
 
     public Paket() {
@@ -271,5 +272,13 @@ public class Paket implements Subject {
         DecimalFormat df = new DecimalFormat("#,###.00");
 
         System.out.printf("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", vrstaPaketa.getOznaka(), uslugaDostave, oznaka, df.format(calculatePrice()), df.format(getVehiclePrice()), statusIsporuke, getCroatianDate(vrijemePrijema), getCroatianDate(vrijemePreuzimanja));
+    }
+
+    public boolean isLoaded() {
+        return isLoaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        isLoaded = loaded;
     }
 }

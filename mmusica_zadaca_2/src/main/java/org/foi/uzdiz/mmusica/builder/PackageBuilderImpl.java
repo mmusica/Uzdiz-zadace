@@ -124,4 +124,10 @@ public class PackageBuilderImpl implements PackageBuilder {
         this.paket.setErrored(isErrored);
         return this;
     }
+
+    @Override
+    public PackageBuilder isLoaded(boolean isLoaded) {
+       this.paket.setLoaded(isLoaded);
+       return this;
+    }
 }

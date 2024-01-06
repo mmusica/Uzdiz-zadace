@@ -2,6 +2,7 @@ package org.foi.uzdiz.mmusica.voznja;
 
 import org.foi.uzdiz.mmusica.model.Paket;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -14,13 +15,13 @@ public class Segment {
     private double distance;
     private LocalDateTime startTime;
     private LocalDateTime finishTime;
-    private long driveDuration;
-    private long deliveryDuration;
-    private long totalSegmentTime;
+    private double driveDuration;
+    private double deliveryDuration;
+    private double totalSegmentTime;
     private Paket paket;
 
-    public Segment(GPS gpsFrom, GPS gpsTo, double distance, LocalDateTime startTime,
-                   LocalDateTime finishTime, long driveDuration, long deliveryDuration, Paket paket) {
+    public Segment(GPS gpsFrom, GPS gpsTo, double distance,
+                   LocalDateTime startTime, LocalDateTime finishTime, double driveDuration, double deliveryDuration, Paket paket) {
         this.gpsFrom = gpsFrom;
         this.gpsTo = gpsTo;
         this.distance = distance;
@@ -64,7 +65,7 @@ public class Segment {
     }
 
     public LocalDateTime getFinishTime() {
-        return this.finishTime;
+        return finishTime;
     }
 
     public void setFinishTime(LocalDateTime finishTime) {
@@ -75,23 +76,23 @@ public class Segment {
         return driveDuration;
     }
 
-    public void setDriveDuration(long driveDuration) {
+    public void setDriveDuration(double driveDuration) {
         this.driveDuration = driveDuration;
     }
 
-    public long getDeliveryDuration() {
+    public double getDeliveryDuration() {
         return deliveryDuration;
     }
 
-    public void setDeliveryDuration(int deliveryDuration) {
+    public void setDeliveryDuration(double deliveryDuration) {
         this.deliveryDuration = deliveryDuration;
     }
 
-    public long getTotalSegmentTime() {
-        return driveDuration + deliveryDuration;
+    public double getTotalSegmentTime() {
+        return this.driveDuration + this.deliveryDuration;
     }
 
-    public void setTotalSegmentTime(long totalSegmentTime) {
+    public void setTotalSegmentTime(double totalSegmentTime) {
         this.totalSegmentTime = totalSegmentTime;
     }
 
