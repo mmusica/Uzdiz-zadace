@@ -1,5 +1,8 @@
 package org.foi.uzdiz.mmusica.voznja;
 
+import org.foi.uzdiz.mmusica.model.Paket;
+import org.foi.uzdiz.mmusica.model.locations.Location;
+
 public class GPS {
     double lat;
     double lon;
@@ -55,5 +58,51 @@ public class GPS {
 
     public boolean equals(GPS gps) {
         return gps.lat == this.lat && gps.lon == this.lon;
+    }
+
+    // c = duljinaUlice, a = lon2-lon1,  b = lat2-lat1
+    // c' (manjiTrokut) = duljinaDoKuce, a'(manjiTrokut), b'(manjiTrokut)
+    //            .
+    //      c   .  |
+    //      .  |   |
+    //   .     |   | a
+    // ._______|___|
+    //      b
+    public static GPS getDestinationGPS(Paket paket) {
+        Location destinationStreet = paket.getDestinationStreet();
+        Long id = destinationStreet.getId();
+
+        GPS startOfStreet = destinationStreet.getStartOfStreet(id);
+        if (paket.getKbrPrimatelja() == 1) {
+            return startOfStreet;
+        }
+        GPS endOfStreet = destinationStreet.getEndOfStreet(id);
+        if (paket.getKbrPrimatelja() == paket.getNajveciKbrUlicePrimatelja()) {
+            return endOfStreet;
+        }
+
+        double postotak = (double) paket.getKbrPrimatelja() / paket.getNajveciKbrUlicePrimatelja();
+        double duljinaUlice = GPS.distance(startOfStreet, endOfStreet);
+        double duljinaDoKuce;
+        if (paket.getKbrPrimatelja() > paket.getNajveciKbrUlicePrimatelja()) {
+            duljinaDoKuce = duljinaUlice;
+        } else {
+            duljinaDoKuce = duljinaUlice * postotak;
+        }
+        double lat1 = startOfStreet.getLat();
+        double lon1 = startOfStreet.getLon();
+
+        double lat2 = endOfStreet.getLat();
+        double lon2 = endOfStreet.getLon();
+
+        double a = Math.abs(Math.max(lon2, lon1) - Math.min(lon2, lon1));
+        double sinAlpha = a / duljinaUlice;
+
+        double aManji = duljinaDoKuce * sinAlpha;
+        double bManji = Math.sqrt(Math.pow(duljinaDoKuce, 2) - Math.pow(aManji, 2));
+
+        double latDestination = lat1 + bManji;
+        double lonDestination = lon1 + aManji;
+        return new GPS(latDestination, lonDestination);
     }
 }

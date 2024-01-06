@@ -13,6 +13,8 @@ import org.foi.uzdiz.mmusica.model.state.InactiveVehicleState;
 import org.foi.uzdiz.mmusica.observer.Observer;
 import org.foi.uzdiz.mmusica.office.ReceptionOffice;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
+import org.foi.uzdiz.mmusica.strategy.ClosestDeliveryStrategy;
+import org.foi.uzdiz.mmusica.strategy.SimpleStrategyFactory;
 import org.foi.uzdiz.mmusica.visitor.DrivesDataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.SegmentDataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDataDisplayVisitor;
@@ -220,8 +222,10 @@ public class UserCommandHandler {
     }
 
     private void voziloChangeState(Vehicle vozilo, String s) {
+
+        SimpleStrategyFactory simpleStrategyFactory = new SimpleStrategyFactory();
         switch (s) {
-            case "A" -> vozilo.changeState(new ActiveVehicleState(vozilo));
+            case "A" -> vozilo.changeState(new ActiveVehicleState(vozilo, simpleStrategyFactory.getStrategy()));
             case "NI" -> vozilo.changeState(new BrokenVehicleState(vozilo));
             case "NA" -> vozilo.changeState(new InactiveVehicleState(vozilo));
         }

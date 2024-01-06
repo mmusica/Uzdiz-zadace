@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class Paket implements Subject {
@@ -280,5 +281,18 @@ public class Paket implements Subject {
 
     public void setLoaded(boolean loaded) {
         isLoaded = loaded;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Paket paket = (Paket) o;
+        return Objects.equals(getOznaka(), paket.getOznaka());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOznaka());
     }
 }

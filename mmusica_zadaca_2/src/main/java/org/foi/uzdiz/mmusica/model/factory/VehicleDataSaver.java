@@ -8,6 +8,7 @@ import org.foi.uzdiz.mmusica.model.state.InactiveVehicleState;
 import org.foi.uzdiz.mmusica.model.state.VehicleState;
 import org.foi.uzdiz.mmusica.repository.Repository;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
+import org.foi.uzdiz.mmusica.strategy.SimpleStrategyFactory;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 import org.foi.uzdiz.mmusica.voznja.GPS;
 
@@ -83,7 +84,8 @@ public class VehicleDataSaver extends DataSaver<Vehicle> {
        VehicleState vehicleState = null;
         switch (a[STATUS]){
            case "A":{
-               vehicleState = new ActiveVehicleState(vehicle);
+               SimpleStrategyFactory simpleStrategyFactory = new SimpleStrategyFactory();
+               vehicleState = new ActiveVehicleState(vehicle, simpleStrategyFactory.getStrategy());
                break;
            }
            case "NA":{

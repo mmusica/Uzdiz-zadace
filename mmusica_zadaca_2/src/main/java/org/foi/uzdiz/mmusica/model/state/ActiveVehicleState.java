@@ -3,6 +3,7 @@ package org.foi.uzdiz.mmusica.model.state;
 import org.foi.uzdiz.mmusica.model.Paket;
 import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.model.locations.Location;
+import org.foi.uzdiz.mmusica.strategy.DeliveryStrategy;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
 import org.foi.uzdiz.mmusica.voznja.Drive;
 import org.foi.uzdiz.mmusica.voznja.GPS;
@@ -14,11 +15,13 @@ import java.util.Optional;
 
 public class ActiveVehicleState implements VehicleState {
     private final Vehicle vehicle;
+    private final DeliveryStrategy deliveryStrategy;
 
-    //private final DeliveryStrategy deliveryStrategy;
-    public ActiveVehicleState(Vehicle vehicle) {
+    public ActiveVehicleState(Vehicle vehicle, DeliveryStrategy deliveryStrategy) {
         this.vehicle = vehicle;
+        this.deliveryStrategy = deliveryStrategy;
     }
+
 
     @Override
     public void finalizeDeliveries() {
@@ -27,9 +30,11 @@ public class ActiveVehicleState implements VehicleState {
                 || this.vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
 
 
-            deliverPackage(currentTime);
+     //       deliverPackage(currentTime);
+            deliveryStrategy.deliverPackage(this.vehicle);
             if (areAllPackagesDelivered()) {
-                sendVehicleHome();
+                //deliveryStrategy
+               deliveryStrategy.sendVehicleHome(this.vehicle);
             }
             //jedini problem je sto se gps zove currentGps i mijenja dok vozilo tehnicki jos ne dode do ureda
             if (areAllPackagesDelivered() && vehicle.getCurrentGPS().equals(TerminalCommandHandler.getInstance().getOfficeGps())) {
@@ -37,7 +42,7 @@ public class ActiveVehicleState implements VehicleState {
             }
         }
     }
-
+    //deliveryStrategy
     private void sendVehicleHome() {
 
         var trenutnoVrijeme = TerminalCommandHandler.getInstance().getVirtualniSat().plusSeconds(0);
@@ -95,15 +100,17 @@ public class ActiveVehicleState implements VehicleState {
         }
         var trenutnoVrijeme = TerminalCommandHandler.getInstance().getVirtualniSat().plusSeconds(0);
         //po prosjecnoj brzini i ukupnim putevima izracunamo kad bude gotovo
+        //tu deliveryStrategy.deliverPackage();
 
-        deliverPackage(trenutnoVrijeme);
+        //deliverPackage(trenutnoVrijeme);
+        deliveryStrategy.deliverPackage(this.vehicle);
 
         System.out.printf("Vozilo %s krenulo u isporuku i biti ce gotovo nakon %s%n", this.vehicle.getOpis(),
                 vehicle.getCroatianDate(this.vehicle.getDeliveryFinishedBy()));
     }
 
     private void deliverPackage(LocalDateTime trenutnoVrijeme) {
-
+        //zaOrderStrategijuSamoSortat pakete od vozila sortVehiclePackages(Vehicle vehicle)
         Optional<Paket> currentlyInDelivery = this.vehicle.getPackages().stream().filter(Paket::isBeingDelivered).findFirst();
         currentlyInDelivery.ifPresent(paket -> {
             paket.setBeingDelivered(false);
@@ -115,7 +122,7 @@ public class ActiveVehicleState implements VehicleState {
             paket.setStatusIsporuke("Dostavljen");
             unloadPackage(paket);
             this.vehicle.setBrojIsporucenih(this.vehicle.getBrojIsporucenih()+1);
-            GPS destinationGPS = getDestinationGPS(paket);
+            GPS destinationGPS = GPS.getDestinationGPS(paket);
             this.vehicle.setCurrentGPS(destinationGPS);
         });
 
@@ -125,7 +132,7 @@ public class ActiveVehicleState implements VehicleState {
 
         paketi.stream().findFirst().ifPresent(paket -> {
             paket.setBeingDelivered(true);
-            GPS destinationGPS = getDestinationGPS(paket);
+            GPS destinationGPS = GPS.getDestinationGPS(paket);
             double udaljenostDoKuce = GPS.distanceInKM(this.vehicle.getCurrentGPS(), destinationGPS);
             double calcTime = (udaljenostDoKuce / this.vehicle.getProsjecnaBrzina()) * 60;
             long minutes = (long) calcTime;
@@ -167,53 +174,6 @@ public class ActiveVehicleState implements VehicleState {
     @Override
     public String giveStatus() {
         return "Aktivan";
-    }
-
-    // c = duljinaUlice, a = lon2-lon1,  b = lat2-lat1
-    // c' (manjiTrokut) = duljinaDoKuce, a'(manjiTrokut), b'(manjiTrokut)
-    //            .
-    //      c   .  |
-    //      .  |   |
-    //   .     |   | a
-    // ._______|___|
-    //      b
-
-    private GPS getDestinationGPS(Paket paket) {
-        Location destinationStreet = paket.getDestinationStreet();
-        Long id = destinationStreet.getId();
-
-        GPS startOfStreet = destinationStreet.getStartOfStreet(id);
-        if (paket.getKbrPrimatelja() == 1) {
-            return startOfStreet;
-        }
-        GPS endOfStreet = destinationStreet.getEndOfStreet(id);
-        if (paket.getKbrPrimatelja() == paket.getNajveciKbrUlicePrimatelja()) {
-            return endOfStreet;
-        }
-
-        double postotak = (double) paket.getKbrPrimatelja() / paket.getNajveciKbrUlicePrimatelja();
-        double duljinaUlice = GPS.distance(startOfStreet, endOfStreet);
-        double duljinaDoKuce;
-        if (paket.getKbrPrimatelja() > paket.getNajveciKbrUlicePrimatelja()) {
-            duljinaDoKuce = duljinaUlice;
-        } else {
-            duljinaDoKuce = duljinaUlice * postotak;
-        }
-        double lat1 = startOfStreet.getLat();
-        double lon1 = startOfStreet.getLon();
-
-        double lat2 = endOfStreet.getLat();
-        double lon2 = endOfStreet.getLon();
-
-        double a = Math.abs(Math.max(lon2, lon1) - Math.min(lon2, lon1));
-        double sinAlpha = a / duljinaUlice;
-
-        double aManji = duljinaDoKuce * sinAlpha;
-        double bManji = Math.sqrt(Math.pow(duljinaDoKuce, 2) - Math.pow(aManji, 2));
-
-        double latDestination = lat1 + bManji;
-        double lonDestination = lon1 + aManji;
-        return new GPS(latDestination, lonDestination);
     }
 
     private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
