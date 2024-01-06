@@ -30,7 +30,6 @@ public class Paket implements Subject {
     private BigDecimal iznosPouzeca;
     private String statusIsporuke;
     private LocalDateTime vrijemePreuzimanja;
-    //Ovih 4 booleana mogu biti state
     private boolean isReceived;
     private boolean isBeingDelivered;
     private boolean isDelivered;

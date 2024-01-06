@@ -57,9 +57,6 @@ public class DeliveryOffice {
                 }
             }
         }
-//        Paket loadedPackage = vehicle.loadPackageIntoVehicle(paket);
-//        if (loadedPackage != null) loadedPackages.add(loadedPackag
-
         return loadedPackages;
     }
 

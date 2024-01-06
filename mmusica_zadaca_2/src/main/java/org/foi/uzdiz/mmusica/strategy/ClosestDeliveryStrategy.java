@@ -14,7 +14,6 @@ public class ClosestDeliveryStrategy implements DeliveryStrategy{
     public boolean isSorted = false;
     @Override
     public void deliverPackage(Vehicle vehicle) {
-        //zaOrderStrategijuSamoSortat pakete od vozila sortVehiclePackages(Vehicle vehicle)
         if(!isSorted && !vehicle.getPackages().stream().allMatch(Paket::isDelivered)){
             vehicle.setPackages(sortVehiclePackagesByClosest(vehicle));
         }
@@ -63,10 +62,6 @@ public class ClosestDeliveryStrategy implements DeliveryStrategy{
     private List<Paket> sortVehiclePackagesByClosest(Vehicle vehicle) {
         List<Paket> returnMe = new ArrayList<>();
 
-        //
-        if(vehicle.getRegistracija().equals("VŽ100PK")){
-            var debug = "debig";
-        }
         for(int i=0; i<vehicle.getPackages().size(); i++){
             List<Paket> packages = vehicle.getPackages().stream().filter(paket -> !paket.isDelivered()).toList();
             GPS start = vehicle.getCurrentGPS();
@@ -85,12 +80,10 @@ public class ClosestDeliveryStrategy implements DeliveryStrategy{
             returnMe.get(returnMe.size()-1).setDelivered(true);
         }
 
-        //
         this.isSorted = true;
         returnMe.forEach(paket -> paket.setDelivered(false));
         vehicle.setCurrentGPS(TerminalCommandHandler.getInstance().getOfficeGps());
         return returnMe;
-
     }
 
     @Override

@@ -98,11 +98,6 @@ public class ActiveVehicleState implements VehicleState {
         if (vehicle.getCurrentGPS().equals(officeGPs)) {
             this.vehicle.getDrives().add(new Drive());
         }
-        var trenutnoVrijeme = TerminalCommandHandler.getInstance().getVirtualniSat().plusSeconds(0);
-        //po prosjecnoj brzini i ukupnim putevima izracunamo kad bude gotovo
-        //tu deliveryStrategy.deliverPackage();
-
-        //deliverPackage(trenutnoVrijeme);
         deliveryStrategy.deliverPackage(this.vehicle);
 
         System.out.printf("Vozilo %s krenulo u isporuku i biti ce gotovo nakon %s%n", this.vehicle.getOpis(),
@@ -110,7 +105,6 @@ public class ActiveVehicleState implements VehicleState {
     }
 
     private void deliverPackage(LocalDateTime trenutnoVrijeme) {
-        //zaOrderStrategijuSamoSortat pakete od vozila sortVehiclePackages(Vehicle vehicle)
         Optional<Paket> currentlyInDelivery = this.vehicle.getPackages().stream().filter(Paket::isBeingDelivered).findFirst();
         currentlyInDelivery.ifPresent(paket -> {
             paket.setBeingDelivered(false);

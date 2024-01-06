@@ -15,9 +15,6 @@ import java.util.regex.Pattern;
 
 public class TerminalCommandHandler {
     private static final TerminalCommandHandler INSTANCE;
-    //    private static final String REGEX_STRING = "--vs\\s+'(?<vs>\\d{2}\\.\\d{2}\\.\\d{4}\\. \\d{2}:\\d{2}:\\d{2})'|" +
-//            "--ms\\s+(?<ms>\\d+)|--pr\\s+'(?<pr>\\d{2}:\\d{2})'|--kr\\s+'(?<kr>\\d{2}:\\d{2})'|--mt\\s+" +
-//            "(?<mt>\\d+)|--vi\\s+(?<vi>\\d+)|--pp\\s+(?<pp>[^\\s]+)|--pv\\s+(?<pv>[^\\s]+)|--vp\\s+(?<vp>[^\\s]+)";
     private static final String REGEX_STRING = "--vs\\s*'?(?<vs>\\d{2}\\.\\d{2}\\.\\d{4}\\.\\s?\\d{2}:\\d{2}:\\d{2})'?" +
             "|--ms\\s+(?<ms>\\d+)|--pr\\s*'?(?<pr>\\d{2}:\\d{2})'?" +
             "|--kr\\s*'?(?<kr>\\d{2}:\\d{2})'?" +
