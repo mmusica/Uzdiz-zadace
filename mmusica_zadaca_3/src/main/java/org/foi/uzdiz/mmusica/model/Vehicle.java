@@ -9,7 +9,6 @@ import org.foi.uzdiz.mmusica.visitor.DataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDisplay;
 import org.foi.uzdiz.mmusica.voznja.Drive;
 import org.foi.uzdiz.mmusica.voznja.GPS;
-import org.foi.uzdiz.mmusica.voznja.Segment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -94,15 +93,15 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     }
 
     public void clearData() {
-        this.vehicleState.clearData();
+        this.vehicleState.clearData(this);
     }
 
     public void finalizeDeliveries() {
-        this.vehicleState.finalizeDeliveries();
+        this.vehicleState.finalizeDeliveries(this);
     }
 
     public Paket loadPackageIntoVehicle(Paket paket) {
-        return this.vehicleState.loadPackageIntoVehicle(paket);
+        return this.vehicleState.loadPackageIntoVehicle(paket,this);
     }
 
     public int getBrojIsporucenih() {
@@ -110,7 +109,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
     }
 
     public void startDeliveringPackages() {
-        this.vehicleState.startDeliveringPackages();
+        this.vehicleState.startDeliveringPackages(this);
     }
 
     public double getLoadedWeightPercentage() {
@@ -331,7 +330,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
             this.deliveryFinishedBy = deliveryFinishedBy;
             this.currentlyLoadedWeight = currentlyLoadedWeight;
             this.currentlyLoadedCapacity = currentlyLoadedCapacity;
-            this.vehicleState = vehicleState;
+            this.vehicleState = vehicleState.cloneThis();
             this.currentGPS = new GPS(currentGPS.getLat(),currentGPS.getLon());
             this.brojIsporucenih = brojIsporucenih;
 

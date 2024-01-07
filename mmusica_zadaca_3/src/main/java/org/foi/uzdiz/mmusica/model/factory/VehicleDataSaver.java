@@ -85,15 +85,15 @@ public class VehicleDataSaver extends DataSaver<Vehicle> {
         switch (a[STATUS]){
            case "A":{
                SimpleStrategyFactory simpleStrategyFactory = new SimpleStrategyFactory();
-               vehicleState = new ActiveVehicleState(vehicle, simpleStrategyFactory.getStrategy());
+               vehicleState = new ActiveVehicleState(simpleStrategyFactory.getStrategy());
                break;
            }
            case "NA":{
-               vehicleState = new InactiveVehicleState(vehicle);
+               vehicleState = new InactiveVehicleState();
                break;
            }
            case "NI":{
-               vehicleState = new BrokenVehicleState(vehicle);
+               vehicleState = new BrokenVehicleState();
                break;
            }
            default:{

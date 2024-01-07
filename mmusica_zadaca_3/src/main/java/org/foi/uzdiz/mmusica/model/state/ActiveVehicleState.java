@@ -10,41 +10,40 @@ import org.foi.uzdiz.mmusica.voznja.GPS;
 import java.time.LocalDateTime;
 
 public class ActiveVehicleState implements VehicleState, Cloneable {
-    private final Vehicle vehicle;
     private final DeliveryStrategy deliveryStrategy;
-    public ActiveVehicleState(Vehicle vehicle, DeliveryStrategy deliveryStrategy) {
-        this.vehicle = vehicle;
+
+    public ActiveVehicleState(DeliveryStrategy deliveryStrategy) {
         this.deliveryStrategy = deliveryStrategy;
     }
 
     @Override
-    public void finalizeDeliveries() {
+    public void finalizeDeliveries(Vehicle vehicle) {
         LocalDateTime currentTime = TerminalCommandHandler.getInstance().getVirtualniSat();
-        if (this.vehicle.isDriving() && (this.vehicle.getDeliveryFinishedBy().isEqual(currentTime)
-                || this.vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
+        if (vehicle.isDriving() && (vehicle.getDeliveryFinishedBy().isEqual(currentTime)
+                || vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
 
-            deliveryStrategy.deliverPackage(this.vehicle);
-            if (areAllPackagesDelivered()) {
-               deliveryStrategy.sendVehicleHome(this.vehicle);
+            deliveryStrategy.deliverPackage(vehicle);
+            if (areAllPackagesDelivered(vehicle)) {
+                deliveryStrategy.sendVehicleHome(vehicle);
             }
             //jedini problem je sto se gps zove currentGps i mijenja dok vozilo tehnicki jos ne dode do ureda
-            if (areAllPackagesDelivered() && vehicle.getCurrentGPS().equals(TerminalCommandHandler.getInstance().getOfficeGps())) {
-                this.clearData();
+            if (areAllPackagesDelivered(vehicle) && vehicle.getCurrentGPS().equals(TerminalCommandHandler.getInstance().getOfficeGps())) {
+                clearData(vehicle);
             }
         }
     }
 
-    private boolean areAllPackagesDelivered() {
-        return this.vehicle.getPackages().stream().allMatch(Paket::isDelivered);
+    private boolean areAllPackagesDelivered(Vehicle vehicle) {
+        return vehicle.getPackages().stream().allMatch(Paket::isDelivered);
     }
 
     @Override
-    public Paket loadPackageIntoVehicle(Paket paket) {
+    public Paket loadPackageIntoVehicle(Paket paket, Vehicle vehicle) {
         if (hasEnoughCapacity(vehicle, paket) && hasEnoughWeight(vehicle, paket)
                 && !paket.isLoaded() && !paket.isErrored()) {
 
-            this.vehicle.setCurrentlyLoadedCapacity(this.vehicle.getCurrentlyLoadedCapacity() + paket.calculatePackageSize());
-            this.vehicle.setCurrentlyLoadedWeight(this.vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
+            vehicle.setCurrentlyLoadedCapacity(vehicle.getCurrentlyLoadedCapacity() + paket.calculatePackageSize());
+            vehicle.setCurrentlyLoadedWeight(vehicle.getCurrentlyLoadedWeight() + paket.getTezina());
 
             paket.setLoaded(true);
             System.out.printf("VRIJEME %s: Ukrcan paket s oznakom %s hitnosti %s na vozilo %s%n",
@@ -52,40 +51,45 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
                     vehicle.getOpis());
             paket.setStatusIsporuke("Ukrcan u vozilo");
 
-            this.vehicle.getPackages().add(paket);
-            return this.vehicle.getPackages().get(vehicle.getPackages().size() - 1);
+            vehicle.getPackages().add(paket);
+            return vehicle.getPackages().get(vehicle.getPackages().size() - 1);
 
         }
         return null;
     }
 
     @Override
-    public void startDeliveringPackages() {
-        this.vehicle.setDriving(true);
+    public void startDeliveringPackages(Vehicle vehicle) {
+        vehicle.setDriving(true);
         GPS officeGPs = TerminalCommandHandler.getInstance().getOfficeGps();
         if (vehicle.getCurrentGPS().equals(officeGPs)) {
-            this.vehicle.getDrives().add(new Drive());
+            vehicle.getDrives().add(new Drive());
         }
-        deliveryStrategy.deliverPackage(this.vehicle);
+        deliveryStrategy.deliverPackage(vehicle);
 
-        System.out.printf("Vozilo %s krenulo u isporuku i biti ce gotovo nakon %s%n", this.vehicle.getOpis(),
-                vehicle.getCroatianDate(this.vehicle.getDeliveryFinishedBy()));
+        System.out.printf("Vozilo %s krenulo u isporuku i biti ce gotovo nakon %s%n", vehicle.getOpis(),
+                vehicle.getCroatianDate(vehicle.getDeliveryFinishedBy()));
     }
 
     @Override
-    public void clearData() {
+    public void clearData(Vehicle vehicle) {
         System.out.printf("VOZILO %s SE VRATILO U URED u virtualno vrijeme: %s%n",
-                this.vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
-        this.vehicle.getPackages().clear();
-        this.vehicle.setCurrentlyLoadedWeight(0);
-        this.vehicle.setCurrentlyLoadedCapacity(0);
-        this.vehicle.setDriving(false);
-        this.vehicle.setDeliveryFinishedBy(null);
+                vehicle.getOpis(), TerminalCommandHandler.getInstance().getCroDateString());
+        vehicle.getPackages().clear();
+        vehicle.setCurrentlyLoadedWeight(0);
+        vehicle.setCurrentlyLoadedCapacity(0);
+        vehicle.setDriving(false);
+        vehicle.setDeliveryFinishedBy(null);
     }
 
     @Override
     public String giveStatus() {
         return "Aktivan";
+    }
+
+    @Override
+    public VehicleState cloneThis() {
+        return this.clone();
     }
 
     private boolean hasEnoughCapacity(Vehicle vehicle, Paket paket) {
@@ -102,6 +106,11 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
 
     @Override
     public ActiveVehicleState clone() {
-        return null;
+        try {
+            ActiveVehicleState clone = (ActiveVehicleState) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

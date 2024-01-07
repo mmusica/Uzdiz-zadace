@@ -13,11 +13,12 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PSCommandHandler extends UserCommandHandler{
+public class PSCommandHandler extends UserCommandHandler {
     final String regexPs = "^PS\\s[^\\s]+(?:\\sA|\\sNI|\\sNA)$";
     private static final int VEHICLE_ID = 1;
     private static final int VEHICLE_STATE = 2;
     final Pattern patternPs = Pattern.compile(regexPs);
+
     public PSCommandHandler(UserCommandHandler next) {
         super(next);
     }
@@ -36,10 +37,12 @@ public class PSCommandHandler extends UserCommandHandler{
     String getCommand() {
         return "PS";
     }
+
     private boolean isPromjenaStanjaCommandValid(String command) {
         final Matcher matcher = patternPs.matcher(command);
         return matcher.matches();
     }
+
     private void handlePromjenaStanja(String[] commandArray) {
         Vehicle vozilo = RepositoryManager.getINSTANCE().getVehicleRepository().find(commandArray[VEHICLE_ID]);
         if (vozilo != null) {
@@ -48,13 +51,14 @@ public class PSCommandHandler extends UserCommandHandler{
             Logger.getGlobal().log(Level.SEVERE, "Vozilo ne postoji");
         }
     }
+
     private void voziloChangeState(Vehicle vozilo, String s) {
 
         SimpleStrategyFactory simpleStrategyFactory = new SimpleStrategyFactory();
         switch (s) {
-            case "A" -> vozilo.changeState(new ActiveVehicleState(vozilo, simpleStrategyFactory.getStrategy()));
-            case "NI" -> vozilo.changeState(new BrokenVehicleState(vozilo));
-            case "NA" -> vozilo.changeState(new InactiveVehicleState(vozilo));
+            case "A" -> vozilo.changeState(new ActiveVehicleState(simpleStrategyFactory.getStrategy()));
+            case "NI" -> vozilo.changeState(new BrokenVehicleState());
+            case "NA" -> vozilo.changeState(new InactiveVehicleState());
         }
     }
 }

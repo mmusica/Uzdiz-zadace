@@ -43,6 +43,10 @@ public class SystemSnapShotCaretaker {
             restoreVehicle(vehicle, saveWord);
         }
         restoreTerminalCommandHandler(saveWord);
+        //Sada kad smo vratili nove refrence objektu - ovi saveovi na saveWordu su koristeni pa ako zelimo opet iskoristiti
+        //taj save onda trebamo kreirati novi save
+        //kreiramo identican save ko onome kaj smo sad iskoristili i zamijenjujemo ga u mapi
+        takeCurrentSystemSnapshot(saveWord, paketi, vehicles);
     }
 
     private void snapShotPaket(Paket paket, String saveWord) {
