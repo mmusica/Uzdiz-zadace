@@ -1,10 +1,10 @@
 package org.foi.uzdiz.mmusica.utils.responsibility_chain;
 
-import org.foi.uzdiz.mmusica.Proxy.PackageSubscriber;
-import org.foi.uzdiz.mmusica.Proxy.PackageSubscriberImpl;
-import org.foi.uzdiz.mmusica.Proxy.PackageSubscriberProxy;
 import org.foi.uzdiz.mmusica.model.Paket;
 import org.foi.uzdiz.mmusica.model.Person;
+import org.foi.uzdiz.mmusica.proxy.PackageSubscriber;
+import org.foi.uzdiz.mmusica.proxy.PackageSubscriberImpl;
+import org.foi.uzdiz.mmusica.proxy.PackageSubscriberProxy;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.util.List;

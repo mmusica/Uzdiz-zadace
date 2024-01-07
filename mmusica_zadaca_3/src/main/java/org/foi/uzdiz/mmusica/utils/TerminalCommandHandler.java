@@ -21,9 +21,6 @@ public class TerminalCommandHandler {
             "|--mt\\s+(?<mt>\\d+)|--vi\\s+(?<vi>\\d+)|--pp\\s*'?(?<pp>[^\\s]+)'?" +
             "|--pv\\s*'?(?<pv>[^\\s]+)'?|--vp\\s+(?<vp>[^\\s]+)";
 
-
-
-
     private static final String BAD_REGEX_STRING = "(--ms \\d+\\.|--ms \\d+\\,)|(--mt \\d+\\.|--mt \\d+\\,)|(--vi \\d+\\.|--vi \\d+\\,)";
 
     private String vrstaPaketaDokument;
@@ -249,5 +246,23 @@ public class TerminalCommandHandler {
 
     public void setNewProperties(Properties newProperties) {
         this.newProperties = newProperties;
+    }
+
+    public TerminalCommandHandlerMemento takeSnapshot(){
+        return new TerminalCommandHandlerMemento(this.getVirtualniSat());
+    }
+    public void restore(TerminalCommandHandlerMemento memento){
+        this.setVirtualniSat(memento.getVr());
+    }
+    public static class TerminalCommandHandlerMemento{
+        private final LocalDateTime vr;
+
+        public TerminalCommandHandlerMemento(LocalDateTime vr) {
+            this.vr = vr;
+        }
+
+        private LocalDateTime getVr() {
+            return vr;
+        }
     }
 }

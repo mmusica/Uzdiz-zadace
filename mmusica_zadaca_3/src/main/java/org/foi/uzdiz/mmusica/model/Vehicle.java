@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Vehicle implements VehicleContext, VehicleDisplay {
     private String registracija;
@@ -78,6 +79,19 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.vehicleState = vehicleState;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return Objects.equals(getRegistracija(), vehicle.getRegistracija());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRegistracija());
+    }
+
     public void clearData() {
         this.vehicleState.clearData();
     }
@@ -94,6 +108,9 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return brojIsporucenih;
     }
 
+    public void startDeliveringPackages() {
+        this.vehicleState.startDeliveringPackages();
+    }
 
     public double getLoadedWeightPercentage() {
         return currentlyLoadedWeight / kapacitetTezine;
@@ -105,10 +122,6 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
 
     public void setBrojIsporucenih(int brojIsporucenih) {
         this.brojIsporucenih = brojIsporucenih;
-    }
-
-    public void startDeliveringPackages() {
-        this.vehicleState.startDeliveringPackages();
     }
 
     public String getCroatianDate(LocalDateTime dateTime) {
@@ -257,4 +270,142 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return totalDistance;
     }
 
+    public VehicleMemento takeSnapshot() {
+        return new VehicleMemento(registracija, opis, kapacitetTezine, kapacitetProstora, redoslijed, prosjecnaBrzina, deliveryArea,
+                money, packages, isDriving, deliveryFinishedBy, currentlyLoadedWeight, currentlyLoadedCapacity,
+                vehicleState, currentGPS, brojIsporucenih, drives);
+    }
+
+    public void restore(VehicleMemento memento) {
+        registracija = memento.getRegistracija();
+        opis = memento.getOpis();
+        kapacitetTezine = memento.getKapacitetTezine();
+        kapacitetProstora = memento.getKapacitetProstora();
+        redoslijed = memento.getRedoslijed();
+        prosjecnaBrzina = memento.getProsjecnaBrzina();
+        deliveryArea = memento.getDeliveryArea();
+        money = memento.getMoney();
+        packages = memento.getPackages();
+        isDriving = memento.isDriving();
+        deliveryFinishedBy = memento.getDeliveryFinishedBy();
+        currentlyLoadedWeight = memento.getCurrentlyLoadedWeight();
+        currentlyLoadedCapacity = memento.getCurrentlyLoadedCapacity();
+        vehicleState = memento.getVehicleState();
+        currentGPS = memento.getCurrentGPS();
+        brojIsporucenih = memento.getBrojIsporucenih();
+        drives = memento.getDrives();
+    }
+
+    public static class VehicleMemento {
+        private final String registracija;
+        private final String opis;
+        private final double kapacitetTezine;
+        private final double kapacitetProstora;
+        private final int redoslijed;
+        private final float prosjecnaBrzina;
+        private final List<Location> deliveryArea;
+        private final BigDecimal money;
+        private final List<Paket> packages;
+        private final boolean isDriving;
+        private final LocalDateTime deliveryFinishedBy;
+        private final double currentlyLoadedWeight;
+        private final double currentlyLoadedCapacity;
+        private final VehicleState vehicleState;
+        private final GPS currentGPS;
+        private final int brojIsporucenih;
+        private final List<Drive> drives;
+
+        public VehicleMemento(String registracija, String opis, double kapacitetTezine, double kapacitetProstora,
+                              int redoslijed, float prosjecnaBrzina, List<Location> deliveryArea, BigDecimal money,
+                              List<Paket> packages, boolean isDriving, LocalDateTime deliveryFinishedBy,
+                              double currentlyLoadedWeight, double currentlyLoadedCapacity, VehicleState vehicleState,
+                              GPS currentGPS, int brojIsporucenih, List<Drive> drives) {
+
+            this.registracija = registracija;
+            this.opis = opis;
+            this.kapacitetTezine = kapacitetTezine;
+            this.kapacitetProstora = kapacitetProstora;
+            this.redoslijed = redoslijed;
+            this.prosjecnaBrzina = prosjecnaBrzina;
+            this.deliveryArea = deliveryArea;
+            this.money = money;
+            this.packages = packages;
+            this.isDriving = isDriving;
+            this.deliveryFinishedBy = deliveryFinishedBy;
+            this.currentlyLoadedWeight = currentlyLoadedWeight;
+            this.currentlyLoadedCapacity = currentlyLoadedCapacity;
+            this.vehicleState = vehicleState;
+            this.currentGPS = currentGPS;
+            this.brojIsporucenih = brojIsporucenih;
+            this.drives = drives;
+        }
+
+        private String getRegistracija() {
+            return registracija;
+        }
+
+        private String getOpis() {
+            return opis;
+        }
+
+        private double getKapacitetTezine() {
+            return kapacitetTezine;
+        }
+
+        private double getKapacitetProstora() {
+            return kapacitetProstora;
+        }
+
+        private int getRedoslijed() {
+            return redoslijed;
+        }
+
+        private float getProsjecnaBrzina() {
+            return prosjecnaBrzina;
+        }
+
+        private List<Location> getDeliveryArea() {
+            return deliveryArea;
+        }
+
+        private BigDecimal getMoney() {
+            return money;
+        }
+
+        private List<Paket> getPackages() {
+            return packages;
+        }
+
+        private boolean isDriving() {
+            return isDriving;
+        }
+
+        private LocalDateTime getDeliveryFinishedBy() {
+            return deliveryFinishedBy;
+        }
+
+        private double getCurrentlyLoadedWeight() {
+            return currentlyLoadedWeight;
+        }
+
+        private double getCurrentlyLoadedCapacity() {
+            return currentlyLoadedCapacity;
+        }
+
+        private VehicleState getVehicleState() {
+            return vehicleState;
+        }
+
+        private GPS getCurrentGPS() {
+            return currentGPS;
+        }
+
+        private int getBrojIsporucenih() {
+            return brojIsporucenih;
+        }
+
+        private List<Drive> getDrives() {
+            return drives;
+        }
+    }
 }

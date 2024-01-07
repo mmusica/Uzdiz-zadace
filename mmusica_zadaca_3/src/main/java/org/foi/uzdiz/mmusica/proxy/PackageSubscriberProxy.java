@@ -1,4 +1,4 @@
-package org.foi.uzdiz.mmusica.Proxy;
+package org.foi.uzdiz.mmusica.proxy;
 
 import org.foi.uzdiz.mmusica.model.Person;
 import org.foi.uzdiz.mmusica.observer.Observer;

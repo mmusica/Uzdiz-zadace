@@ -40,6 +40,19 @@ public class Paket implements Subject {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Paket paket = (Paket) o;
+        return Objects.equals(getOznaka(), paket.getOznaka());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOznaka());
+    }
+
+    @Override
     public void registerObserver(Observer observer) {
         if (!observerList.contains(observer)) this.observerList.add(observer);
     }
@@ -282,16 +295,156 @@ public class Paket implements Subject {
         isLoaded = loaded;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Paket paket = (Paket) o;
-        return Objects.equals(getOznaka(), paket.getOznaka());
+    public PaketMemento takeSnapshot() {
+        return new PaketMemento(observerList, oznaka, vrijemePrijema, posiljatelj,
+                primatelj, vrstaPaketa, visina, sirina, duzina, tezina, uslugaDostave,
+                iznosPouzeca, statusIsporuke, vrijemePreuzimanja, isReceived, isBeingDelivered, isDelivered, isLoaded,
+                isErrored);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getOznaka());
+    public void restore(PaketMemento memento){
+        observerList = memento.getObserverList();
+        oznaka = memento.getOznaka();
+        vrijemePrijema = memento.getVrijemePrijema();
+        posiljatelj = memento.getPosiljatelj();
+        primatelj = memento.getPrimatelj();
+        vrstaPaketa = memento.getVrstaPaketa();
+        visina = memento.getVisina();
+        sirina = memento.getSirina();
+        duzina = memento.getDuzina();
+        tezina = memento.getTezina();
+        uslugaDostave = memento.getUslugaDostave();
+        iznosPouzeca = memento.getIznosPouzeca();
+        statusIsporuke = memento.getStatusIsporuke();
+        vrijemePreuzimanja = memento.getVrijemePreuzimanja();
+        isReceived = memento.isReceived();
+        isBeingDelivered = memento.isBeingDelivered();
+        isDelivered = memento.isDelivered();
+        isLoaded = memento.isLoaded();
+        isErrored = memento.isErrored();
+    }
+
+    public static class PaketMemento {
+        private final List<Observer> observerList;
+        private final String oznaka;
+        private final LocalDateTime vrijemePrijema;
+        private final Person posiljatelj;
+        private final Person primatelj;
+        private final PackageType vrstaPaketa;
+        private final double visina;
+        private final double sirina;
+        private final double duzina;
+        private final double tezina;
+        private final String uslugaDostave;
+        private final BigDecimal iznosPouzeca;
+        private final String statusIsporuke;
+        private final LocalDateTime vrijemePreuzimanja;
+        private final boolean isReceived;
+        private final boolean isBeingDelivered;
+        private final boolean isDelivered;
+        private final boolean isLoaded;
+        private final boolean isErrored;
+
+        public PaketMemento(List<Observer> observerList, String oznaka, LocalDateTime vrijemePrijema,
+                            Person posiljatelj, Person primatelj, PackageType vrstaPaketa, double visina, double sirina,
+                            double duzina, double tezina, String uslugaDostave, BigDecimal iznosPouzeca, String statusIsporuke,
+                            LocalDateTime vrijemePreuzimanja, boolean isReceived, boolean isBeingDelivered, boolean isDelivered,
+                            boolean isLoaded, boolean isErrored) {
+            this.observerList = observerList;
+            this.oznaka = oznaka;
+            this.vrijemePrijema = vrijemePrijema;
+            this.posiljatelj = posiljatelj;
+            this.primatelj = primatelj;
+            this.vrstaPaketa = vrstaPaketa;
+            this.visina = visina;
+            this.sirina = sirina;
+            this.duzina = duzina;
+            this.tezina = tezina;
+            this.uslugaDostave = uslugaDostave;
+            this.iznosPouzeca = iznosPouzeca;
+            this.statusIsporuke = statusIsporuke;
+            this.vrijemePreuzimanja = vrijemePreuzimanja;
+            this.isReceived = isReceived;
+            this.isBeingDelivered = isBeingDelivered;
+            this.isDelivered = isDelivered;
+            this.isLoaded = isLoaded;
+            this.isErrored = isErrored;
+        }
+
+        private List<Observer> getObserverList() {
+            return observerList;
+        }
+
+        private String getOznaka() {
+            return oznaka;
+        }
+
+        private LocalDateTime getVrijemePrijema() {
+            return vrijemePrijema;
+        }
+
+        private Person getPosiljatelj() {
+            return posiljatelj;
+        }
+
+        private Person getPrimatelj() {
+            return primatelj;
+        }
+
+        private PackageType getVrstaPaketa() {
+            return vrstaPaketa;
+        }
+
+        private double getVisina() {
+            return visina;
+        }
+
+        private double getSirina() {
+            return sirina;
+        }
+
+        private double getDuzina() {
+            return duzina;
+        }
+
+        private double getTezina() {
+            return tezina;
+        }
+
+        private String getUslugaDostave() {
+            return uslugaDostave;
+        }
+
+        private BigDecimal getIznosPouzeca() {
+            return iznosPouzeca;
+        }
+
+        private String getStatusIsporuke() {
+            return statusIsporuke;
+        }
+
+        private LocalDateTime getVrijemePreuzimanja() {
+            return vrijemePreuzimanja;
+        }
+
+        private boolean isReceived() {
+            return isReceived;
+        }
+
+        private boolean isBeingDelivered() {
+            return isBeingDelivered;
+        }
+
+        private boolean isDelivered() {
+            return isDelivered;
+        }
+
+        private boolean isLoaded() {
+            return isLoaded;
+        }
+
+        private boolean isErrored() {
+            return isErrored;
+        }
     }
 }
