@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 public class ActiveVehicleState implements VehicleState {
     private final Vehicle vehicle;
     private final DeliveryStrategy deliveryStrategy;
-
+    public ActiveVehicleState(ActiveVehicleState vehicleState){
+        this.vehicle =  vehicleState.vehicle;
+        this.deliveryStrategy = vehicleState.deliveryStrategy;
+    }
     public ActiveVehicleState(Vehicle vehicle, DeliveryStrategy deliveryStrategy) {
         this.vehicle = vehicle;
         this.deliveryStrategy = deliveryStrategy;

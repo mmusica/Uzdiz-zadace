@@ -350,7 +350,7 @@ public class Paket implements Subject {
                             double duzina, double tezina, String uslugaDostave, BigDecimal iznosPouzeca, String statusIsporuke,
                             LocalDateTime vrijemePreuzimanja, boolean isReceived, boolean isBeingDelivered, boolean isDelivered,
                             boolean isLoaded, boolean isErrored) {
-            this.observerList = observerList;
+            this.observerList = new ArrayList<>(observerList);
             this.oznaka = oznaka;
             this.vrijemePrijema = vrijemePrijema;
             this.posiljatelj = posiljatelj;

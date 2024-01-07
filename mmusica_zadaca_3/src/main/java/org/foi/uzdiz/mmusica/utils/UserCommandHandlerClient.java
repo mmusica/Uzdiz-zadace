@@ -5,7 +5,9 @@ import org.foi.uzdiz.mmusica.utils.responsibility_chain.*;
 public class UserCommandHandlerClient {
     public void handleUserCommand(String command) {
         String[] commandArray = command.split(" ");
-        UnProxyCommandHandler unProxyCommandHandler = new UnProxyCommandHandler(null);
+        SPVCommandHandler spvCommandHandler = new SPVCommandHandler(null);
+        PPVCommandHandler ppvCommandHandler = new PPVCommandHandler(spvCommandHandler);
+        UnProxyCommandHandler unProxyCommandHandler = new UnProxyCommandHandler(ppvCommandHandler);
         ProxyCommandHandler proxyCommandHandler = new ProxyCommandHandler(unProxyCommandHandler);
         AdminCommandHandler adminCommandHandler = new AdminCommandHandler(proxyCommandHandler);
         PSCommandHandler psCommandHandler = new PSCommandHandler(adminCommandHandler);

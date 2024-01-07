@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Drive {
+//MORAS PROTOTYPE
+public class Drive implements Cloneable{
     List<Segment> segments;
 
     public Drive() {
@@ -68,5 +69,17 @@ public class Drive {
 
         stringBuilder.append(brojacHitni).append(" HITNIH, ").append(brojacObicni).append(" NORMALNIH, ").append(brojIsporucenih).append(" DOSTAVLJENIH");
         return stringBuilder.toString();
+    }
+
+    @Override
+    public Drive clone() {
+        try {
+            Drive clone = (Drive) super.clone();
+            List<Segment> segments1 = new ArrayList<>(segments);
+            clone.setSegments(segments1);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

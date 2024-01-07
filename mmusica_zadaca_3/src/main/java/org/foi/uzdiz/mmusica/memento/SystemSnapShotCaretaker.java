@@ -9,18 +9,19 @@ import java.util.List;
 import java.util.Map;
 
 public class SystemSnapShotCaretaker {
-    private final Map<String, Map<Paket, Paket.PaketMemento>> paketMementoMap = new HashMap<>();
-    private final Map<String, Map<Vehicle, Vehicle.VehicleMemento>> vehicleMementoMap = new HashMap<>();
+    private final Map<String, Map<String, Paket.PaketMemento>> paketMementoMap = new HashMap<>();
+    private final Map<String, Map<String, Vehicle.VehicleMemento>> vehicleMementoMap = new HashMap<>();
     private final Map<String, TerminalCommandHandler.TerminalCommandHandlerMemento> vr = new HashMap<>();
     private static final SystemSnapShotCaretaker INSTANCE;
 
-    static{
+    static {
         INSTANCE = new SystemSnapShotCaretaker();
     }
+
     private SystemSnapShotCaretaker() {
     }
 
-    public static SystemSnapShotCaretaker getInstance(){
+    public static SystemSnapShotCaretaker getInstance() {
         return INSTANCE;
     }
 
@@ -45,21 +46,19 @@ public class SystemSnapShotCaretaker {
     }
 
     private void snapShotPaket(Paket paket, String saveWord) {
-        if (paketMementoMap.containsKey(saveWord)) {
-            Map<Paket, Paket.PaketMemento> paketPaketMementoMap = paketMementoMap.get(saveWord);
-            paketPaketMementoMap.put(paket, paket.takeSnapshot());
-        } else {
+        if (!paketMementoMap.containsKey(saveWord)) {
             paketMementoMap.put(saveWord, new HashMap<>());
         }
+        Map<String, Paket.PaketMemento> paketPaketMementoMap = paketMementoMap.get(saveWord);
+        paketPaketMementoMap.put(paket.getOznaka(), paket.takeSnapshot());
     }
 
     private void snapShotVehicle(Vehicle vehicle, String saveWord) {
-        if (vehicleMementoMap.containsKey(saveWord)) {
-            Map<Vehicle, Vehicle.VehicleMemento> vehicleVehicleMementoMap = vehicleMementoMap.get(saveWord);
-            vehicleVehicleMementoMap.put(vehicle, vehicle.takeSnapshot());
-        } else {
+        if (!vehicleMementoMap.containsKey(saveWord)) {
             vehicleMementoMap.put(saveWord, new HashMap<>());
         }
+        Map<String, Vehicle.VehicleMemento> vehicleVehicleMementoMap = vehicleMementoMap.get(saveWord);
+        vehicleVehicleMementoMap.put(vehicle.getRegistracija(), vehicle.takeSnapshot());
     }
 
     private void snapShotTerminalCommandHandler(String saveWord) {
@@ -68,8 +67,8 @@ public class SystemSnapShotCaretaker {
 
     private void restorePaket(Paket paket, String saveWord) {
         if (paketMementoMap.containsKey(saveWord)) {
-            Map<Paket, Paket.PaketMemento> paketPaketMementoMap = paketMementoMap.get(saveWord);
-            Paket.PaketMemento paketMemento = paketPaketMementoMap.get(paket);
+            Map<String, Paket.PaketMemento> paketPaketMementoMap = paketMementoMap.get(saveWord);
+            Paket.PaketMemento paketMemento = paketPaketMementoMap.get(paket.getOznaka());
             paket.restore(paketMemento);
         } else {
             System.out.println("Ovakav snapshot ne postoji");
@@ -78,8 +77,8 @@ public class SystemSnapShotCaretaker {
 
     private void restoreVehicle(Vehicle vehicle, String saveWord) {
         if (vehicleMementoMap.containsKey(saveWord)) {
-            Map<Vehicle, Vehicle.VehicleMemento> vehicleVehicleMementoMap = vehicleMementoMap.get(saveWord);
-            Vehicle.VehicleMemento vehicleMemento = vehicleVehicleMementoMap.get(vehicle);
+            Map<String, Vehicle.VehicleMemento> vehicleVehicleMementoMap = vehicleMementoMap.get(saveWord);
+            Vehicle.VehicleMemento vehicleMemento = vehicleVehicleMementoMap.get(vehicle.getRegistracija());
             vehicle.restore(vehicleMemento);
         } else {
             System.out.println("Ovakav snapshot ne postoji");

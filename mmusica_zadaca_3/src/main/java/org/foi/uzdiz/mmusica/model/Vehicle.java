@@ -9,6 +9,7 @@ import org.foi.uzdiz.mmusica.visitor.DataDisplayVisitor;
 import org.foi.uzdiz.mmusica.visitor.VehicleDisplay;
 import org.foi.uzdiz.mmusica.voznja.Drive;
 import org.foi.uzdiz.mmusica.voznja.GPS;
+import org.foi.uzdiz.mmusica.voznja.Segment;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -250,10 +251,6 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         this.currentGPS = currentGPS;
     }
 
-    public void setVehicleState(VehicleState vehicleState) {
-        this.vehicleState = vehicleState;
-    }
-
     public List<Drive> getDrives() {
         return drives;
     }
@@ -327,7 +324,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
             this.kapacitetProstora = kapacitetProstora;
             this.redoslijed = redoslijed;
             this.prosjecnaBrzina = prosjecnaBrzina;
-            this.deliveryArea = deliveryArea;
+            this.deliveryArea = new ArrayList<>(deliveryArea);
             this.money = money;
             this.packages = packages;
             this.isDriving = isDriving;
@@ -335,9 +332,13 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
             this.currentlyLoadedWeight = currentlyLoadedWeight;
             this.currentlyLoadedCapacity = currentlyLoadedCapacity;
             this.vehicleState = vehicleState;
-            this.currentGPS = currentGPS;
+            this.currentGPS = new GPS(currentGPS.getLat(),currentGPS.getLon());
             this.brojIsporucenih = brojIsporucenih;
-            this.drives = drives;
+
+            this.drives = new ArrayList<>();
+            for (Drive d : drives){
+                this.drives.add(d.clone());
+            }
         }
 
         private String getRegistracija() {
