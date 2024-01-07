@@ -9,13 +9,9 @@ import org.foi.uzdiz.mmusica.voznja.GPS;
 
 import java.time.LocalDateTime;
 
-public class ActiveVehicleState implements VehicleState {
+public class ActiveVehicleState implements VehicleState, Cloneable {
     private final Vehicle vehicle;
     private final DeliveryStrategy deliveryStrategy;
-    public ActiveVehicleState(ActiveVehicleState vehicleState){
-        this.vehicle =  vehicleState.vehicle;
-        this.deliveryStrategy = vehicleState.deliveryStrategy;
-    }
     public ActiveVehicleState(Vehicle vehicle, DeliveryStrategy deliveryStrategy) {
         this.vehicle = vehicle;
         this.deliveryStrategy = deliveryStrategy;
@@ -102,5 +98,10 @@ public class ActiveVehicleState implements VehicleState {
         double capacity = vehicle.getKapacitetTezine() - vehicle.getCurrentlyLoadedWeight();
         double packageWeight = paket.getTezina();
         return packageWeight <= capacity;
+    }
+
+    @Override
+    public ActiveVehicleState clone() {
+        return null;
     }
 }

@@ -326,7 +326,7 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
             this.prosjecnaBrzina = prosjecnaBrzina;
             this.deliveryArea = new ArrayList<>(deliveryArea);
             this.money = money;
-            this.packages = packages;
+            this.packages = new ArrayList<>(packages);
             this.isDriving = isDriving;
             this.deliveryFinishedBy = deliveryFinishedBy;
             this.currentlyLoadedWeight = currentlyLoadedWeight;
