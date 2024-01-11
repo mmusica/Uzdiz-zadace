@@ -1,1 +1,1 @@
-java -jar target/mmusica_zadaca_2-1.0.jar DZ_2_parametri.txt
+java -jar target/mmusica_zadaca_3-1.0.jar DZ_2_parametri.txt

@@ -6,6 +6,8 @@ import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SPVCommandHandler extends UserCommandHandler{
     public SPVCommandHandler(UserCommandHandler next) {
@@ -29,6 +31,7 @@ public class SPVCommandHandler extends UserCommandHandler{
         List<Paket> paketi = RepositoryManager.getINSTANCE().getPackageRepository().getAll();
         List<Vehicle> vehicles = RepositoryManager.getINSTANCE().getVehicleRepository().getAll();
         SystemSnapShotCaretaker.getInstance().takeCurrentSystemSnapshot(saveWord,paketi,vehicles);
+        Logger.getGlobal().log(Level.INFO, "Stanje uspjesno spremljeno");
     }
 
     @Override

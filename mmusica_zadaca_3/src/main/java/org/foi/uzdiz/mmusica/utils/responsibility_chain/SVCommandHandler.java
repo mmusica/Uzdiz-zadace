@@ -11,6 +11,10 @@ public class SVCommandHandler extends UserCommandHandler {
 
     @Override
     void executeCommand(String[] commandArray) {
+        if(commandArray.length != 1){
+            System.out.println("Neispravan broj argumenata");
+            return;
+        }
         System.out.printf("TRENUTNO VRIJEME: %s%n", TerminalCommandHandler.getInstance().getCroDateString());
         System.out.printf("%-15s | %-15s | %-20s | %-12s | %-12s %n", "STATUS", "UKUPNO KM", "ZAUZETOST(%)"
                 , "BROJ VOZNJI", "BROJ PAKETA");

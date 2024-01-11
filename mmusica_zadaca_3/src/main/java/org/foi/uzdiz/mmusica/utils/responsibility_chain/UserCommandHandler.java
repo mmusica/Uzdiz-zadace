@@ -3,6 +3,9 @@ package org.foi.uzdiz.mmusica.utils.responsibility_chain;
 import org.foi.uzdiz.mmusica.model.Person;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class UserCommandHandler {
     protected UserCommandHandler next;
 
@@ -12,6 +15,10 @@ public abstract class UserCommandHandler {
         } else {
             if (next != null) {
                 next.handleCommand(commandArray);
+            }else {
+                if (!commandArray[0].equalsIgnoreCase("Q")) {
+                    Logger.getGlobal().log(Level.WARNING, "Unesena nepoznata/neispavna naredba");
+                }
             }
         }
     }

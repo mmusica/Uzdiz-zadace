@@ -6,6 +6,8 @@ import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PPVCommandHandler extends UserCommandHandler{
     public PPVCommandHandler(UserCommandHandler next) {
@@ -30,6 +32,7 @@ public class PPVCommandHandler extends UserCommandHandler{
         List<Paket> paketi = RepositoryManager.getINSTANCE().getPackageRepository().getAll();
         List<Vehicle> vehicles = RepositoryManager.getINSTANCE().getVehicleRepository().getAll();
         SystemSnapShotCaretaker.getInstance().restoreCurrentSystem(saveWord,paketi,vehicles);
+        Logger.getGlobal().log(Level.INFO, "Stanje sustava uspjesno vraceno");
     }
 
     @Override

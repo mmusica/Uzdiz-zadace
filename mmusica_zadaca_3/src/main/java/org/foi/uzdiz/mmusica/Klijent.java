@@ -12,14 +12,8 @@ import java.util.logging.Logger;
 public class Klijent {
     public static void main(String[] args) {
         String command = getCommand(args);
-
         DataFacade dataFacade = new DataFacadeImpl();
         dataFacade.initializeDataWithCommand(command);
-
-        var lol = RepositoryManager.getINSTANCE().getAreasRepository();
-        var lol2 = RepositoryManager.getINSTANCE().getVehicleRepository();
-        var lol3 = RepositoryManager.getINSTANCE().getPackageRepository();
-        var lol4 = RepositoryManager.getINSTANCE().getPersonRepository();
         askForUserInput(new UserCommandHandlerClient());
     }
 
@@ -29,7 +23,7 @@ public class Klijent {
             Scanner myObj = new Scanner(System.in);
             command = myObj.nextLine();
             userCommandHandlerClient.handleUserCommand(command);
-            Logger.getGlobal().log(Level.INFO, "Naredba Izvrsena!");
+            System.out.println("--------------------------------------------------------------------------------------");
         } while (!command.equalsIgnoreCase("Q"));
     }
 
