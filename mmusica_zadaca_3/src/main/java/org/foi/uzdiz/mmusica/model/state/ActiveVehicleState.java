@@ -22,7 +22,7 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
         if (vehicle.isDriving() && (vehicle.getDeliveryFinishedBy().isEqual(currentTime)
                 || vehicle.getDeliveryFinishedBy().isBefore(currentTime))) {
 
-            deliveryStrategy.deliverPackage(vehicle);
+            deliveryStrategy.deliverPackages(vehicle);
             if (areAllPackagesDelivered(vehicle)) {
                 deliveryStrategy.sendVehicleHome(vehicle);
             }
@@ -65,7 +65,7 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
         if (vehicle.getCurrentGPS().equals(officeGPs)) {
             vehicle.getDrives().add(new Drive());
         }
-        deliveryStrategy.deliverPackage(vehicle);
+        deliveryStrategy.deliverPackages(vehicle);
 
         System.out.printf("Vozilo %s krenulo u isporuku i biti ce gotovo nakon %s%n", vehicle.getOpis(),
                 vehicle.getCroatianDate(vehicle.getDeliveryFinishedBy()));
