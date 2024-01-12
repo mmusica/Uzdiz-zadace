@@ -281,10 +281,29 @@ public class Paket implements Subject {
         isErrored = errored;
     }
 
-    public void soutPackage() {
+    public String getPackageString() {
         DecimalFormat df = new DecimalFormat("#,###.00");
 
-        System.out.printf("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", vrstaPaketa.getOznaka(), uslugaDostave, oznaka, df.format(calculatePrice()), df.format(getVehiclePrice()), statusIsporuke, getCroatianDate(vrijemePrijema), getCroatianDate(vrijemePreuzimanja));
+        return String.format("%-5s | %-10s | %-10s | %-12s | %-12s | %-25s | %-20s | %-20s%n", vrstaPaketa.getOznaka(),
+                uslugaDostave, oznaka, df.format(calculatePrice()), df.format(getVehiclePrice()), statusIsporuke,
+                getCroatianDate(vrijemePrijema), getCroatianDate(vrijemePreuzimanja));
+    }
+
+    public String getWIPPackageString() {
+        String posiljatelj;
+        String primatelj;
+        if (this.posiljatelj == null) {
+            posiljatelj = "null";
+        } else {
+            posiljatelj = this.posiljatelj.getName();
+        }
+
+        if (this.primatelj == null) {
+            primatelj = "null";
+        } else {
+            primatelj = this.primatelj.getName();
+        }
+        return String.format("%-10s | %-20s | %-20s%n", this.oznaka, posiljatelj, primatelj);
     }
 
     public boolean isLoaded() {
@@ -302,7 +321,7 @@ public class Paket implements Subject {
                 isErrored);
     }
 
-    public void restore(PaketMemento memento){
+    public void restore(PaketMemento memento) {
         observerList = memento.getObserverList();
         oznaka = memento.getOznaka();
         vrijemePrijema = memento.getVrijemePrijema();
