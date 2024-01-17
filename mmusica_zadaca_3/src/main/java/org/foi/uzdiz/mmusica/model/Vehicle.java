@@ -146,32 +146,16 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return registracija;
     }
 
-    public void setRegistracija(String registracija) {
-        this.registracija = registracija;
-    }
-
     public String getOpis() {
         return opis;
-    }
-
-    public void setOpis(String opis) {
-        this.opis = opis;
     }
 
     public double getKapacitetTezine() {
         return kapacitetTezine;
     }
 
-    public void setKapacitetTezine(double kapacitetTezine) {
-        this.kapacitetTezine = kapacitetTezine;
-    }
-
     public double getKapacitetProstora() {
         return kapacitetProstora;
-    }
-
-    public void setKapacitetProstora(double kapacitetProstora) {
-        this.kapacitetProstora = kapacitetProstora;
     }
 
     public int getRedoslijed() {
@@ -226,16 +210,8 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
         return prosjecnaBrzina;
     }
 
-    public void setProsjecnaBrzina(float prosjecnaBrzina) {
-        this.prosjecnaBrzina = prosjecnaBrzina;
-    }
-
     public List<Location> getDeliveryArea() {
         return deliveryArea;
-    }
-
-    public void setDeliveryArea(List<Location> deliveryArea) {
-        this.deliveryArea = deliveryArea;
     }
 
     public VehicleState getVehicleState() {
@@ -252,10 +228,6 @@ public class Vehicle implements VehicleContext, VehicleDisplay {
 
     public List<Drive> getDrives() {
         return drives;
-    }
-
-    public void setDrives(List<Drive> drives) {
-        this.drives = drives;
     }
 
     public double getAllDrivesDistance() {

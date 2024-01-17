@@ -1,9 +1,5 @@
 package org.foi.uzdiz.mmusica.utils.decorator;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-
 public class CIPDecorator extends IPDecorator {
 
     IPOutputer ipOutputer;

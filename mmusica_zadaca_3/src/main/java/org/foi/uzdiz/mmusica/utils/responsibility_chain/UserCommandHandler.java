@@ -23,7 +23,7 @@ public abstract class UserCommandHandler {
         }
     }
 
-    public UserCommandHandler(UserCommandHandler next) {
+    protected UserCommandHandler(UserCommandHandler next) {
         this.next = next;
     }
 

@@ -27,7 +27,6 @@ public class SPVCommandHandler extends UserCommandHandler{
             System.out.println("Neispravan format naredbe");
             return;
         }
-        String realSaveWord = saveWord.substring(1,saveWord.length()-2);
         List<Paket> paketi = RepositoryManager.getINSTANCE().getPackageRepository().getAll();
         List<Vehicle> vehicles = RepositoryManager.getINSTANCE().getVehicleRepository().getAll();
         SystemSnapShotCaretaker.getInstance().takeCurrentSystemSnapshot(saveWord,paketi,vehicles);

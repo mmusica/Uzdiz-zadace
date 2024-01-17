@@ -3,12 +3,12 @@ package org.foi.uzdiz.mmusica.strategy;
 import org.foi.uzdiz.mmusica.model.Paket;
 import org.foi.uzdiz.mmusica.model.Vehicle;
 import org.foi.uzdiz.mmusica.utils.TerminalCommandHandler;
-import org.foi.uzdiz.mmusica.voznja.Drive;
 import org.foi.uzdiz.mmusica.voznja.GPS;
-import org.foi.uzdiz.mmusica.voznja.Segment;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClosestDeliveryStrategy implements DeliveryStrategy{
     public boolean isSorted = false;

@@ -37,18 +37,6 @@ public class DrivesDataDisplayVisitor implements DataDisplayVisitor {
 
     }
 
-    private static String getTrajanjeString(Duration trajanje) {
-        long trajanjeSeconds = trajanje.toSeconds();
-        long trajanjeMinutes = trajanje.toMinutes();
-        if (trajanje.toSeconds() >= 60) {
-            trajanjeSeconds = trajanje.toMinutes() * 60 - trajanje.toSeconds();
-        }
-        if (trajanje.toMinutes() >= 60) {
-            trajanjeMinutes = trajanje.toHours() * 60 - trajanje.toMinutes();
-        }
-        return trajanje.toHours() + "H:" + trajanjeMinutes + "M:" + trajanjeSeconds + "S";
-    }
-
     public String getCroatianDate(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss");
         return dateTime.format(formatter);

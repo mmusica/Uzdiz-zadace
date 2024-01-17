@@ -56,7 +56,7 @@ public class GPS {
         }
     }
 
-    public boolean equals(GPS gps) {
+    public boolean equalsGps(GPS gps) {
         return gps.lat == this.lat && gps.lon == this.lon;
     }
 
@@ -92,7 +92,6 @@ public class GPS {
         double lat1 = startOfStreet.getLat();
         double lon1 = startOfStreet.getLon();
 
-        double lat2 = endOfStreet.getLat();
         double lon2 = endOfStreet.getLon();
 
         double a = Math.abs(Math.max(lon2, lon1) - Math.min(lon2, lon1));

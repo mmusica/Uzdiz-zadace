@@ -2,12 +2,9 @@ package org.foi.uzdiz.mmusica;
 
 import org.foi.uzdiz.mmusica.facade.DataFacade;
 import org.foi.uzdiz.mmusica.facade.impl.DataFacadeImpl;
-import org.foi.uzdiz.mmusica.repository.singleton.RepositoryManager;
 import org.foi.uzdiz.mmusica.utils.UserCommandHandlerClient;
 
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Klijent {
     public static void main(String[] args) {

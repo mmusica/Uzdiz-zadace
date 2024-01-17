@@ -20,7 +20,6 @@ public class ParameterHandler {
         return stringBuilder.toString().trim();
     }
     public void setNewProperties(Properties properties) {
-        StringBuilder stringBuilder = new StringBuilder();
         Enumeration<Object> keys = properties.keys();
         while (keys.hasMoreElements()){
             String key = keys.nextElement().toString();

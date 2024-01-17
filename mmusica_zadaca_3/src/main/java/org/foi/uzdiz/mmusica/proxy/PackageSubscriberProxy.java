@@ -14,22 +14,19 @@ public class PackageSubscriberProxy implements PackageSubscriber {
 
     @Override
     public void subscribe(Subject paket, Observer observer) {
-        if(observer instanceof Person person){
-            if (!person.isAdmin()) {
+        if(observer instanceof Person person && (!person.isAdmin())) {
                 System.out.println("PROXY ERROR: "+observer.getName()+" nije admin");
                 return;
-            }
+
         }
         packageSubscriberImpl.subscribe(paket,observer);
     }
 
     @Override
     public void unsubscribe(Subject paket, Observer observer) {
-        if(observer instanceof Person person){
-            if (!person.isAdmin()) {
+        if(observer instanceof Person person && (!person.isAdmin())) {
                 System.out.println("PROXY ERROR: "+observer.getName()+" nije admin");
                 return;
-            }
         }
         packageSubscriberImpl.unsubscribe(paket,observer);
     }

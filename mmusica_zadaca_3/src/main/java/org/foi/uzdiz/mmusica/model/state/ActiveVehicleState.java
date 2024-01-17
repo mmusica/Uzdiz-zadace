@@ -27,7 +27,7 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
                 deliveryStrategy.sendVehicleHome(vehicle);
             }
             //jedini problem je sto se gps zove currentGps i mijenja dok vozilo tehnicki jos ne dode do ureda
-            if (areAllPackagesDelivered(vehicle) && vehicle.getCurrentGPS().equals(TerminalCommandHandler.getInstance().getOfficeGps())) {
+            if (areAllPackagesDelivered(vehicle) && vehicle.getCurrentGPS().equalsGps(TerminalCommandHandler.getInstance().getOfficeGps())) {
                 clearData(vehicle);
             }
         }
@@ -62,7 +62,7 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
     public void startDeliveringPackages(Vehicle vehicle) {
         vehicle.setDriving(true);
         GPS officeGPs = TerminalCommandHandler.getInstance().getOfficeGps();
-        if (vehicle.getCurrentGPS().equals(officeGPs)) {
+        if (vehicle.getCurrentGPS().equalsGps(officeGPs)) {
             vehicle.getDrives().add(new Drive());
         }
         deliveryStrategy.deliverPackages(vehicle);
@@ -107,8 +107,7 @@ public class ActiveVehicleState implements VehicleState, Cloneable {
     @Override
     public ActiveVehicleState clone() {
         try {
-            ActiveVehicleState clone = (ActiveVehicleState) super.clone();
-            return clone;
+            return (ActiveVehicleState) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
         }

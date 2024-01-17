@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SystemSnapShotCaretaker {
+    public static final String OVAKAV_SNAPSHOT_NE_POSTOJI = "Ovakav snapshot ne postoji";
     private final Map<String, Map<String, Paket.PaketMemento>> paketMementoMap = new HashMap<>();
     private final Map<String, Map<String, Vehicle.VehicleMemento>> vehicleMementoMap = new HashMap<>();
     private final Map<String, TerminalCommandHandler.TerminalCommandHandlerMemento> vr = new HashMap<>();
@@ -75,7 +76,7 @@ public class SystemSnapShotCaretaker {
             Paket.PaketMemento paketMemento = paketPaketMementoMap.get(paket.getOznaka());
             paket.restore(paketMemento);
         } else {
-            System.out.println("Ovakav snapshot ne postoji");
+            System.out.println(OVAKAV_SNAPSHOT_NE_POSTOJI);
         }
     }
 
@@ -85,7 +86,7 @@ public class SystemSnapShotCaretaker {
             Vehicle.VehicleMemento vehicleMemento = vehicleVehicleMementoMap.get(vehicle.getRegistracija());
             vehicle.restore(vehicleMemento);
         } else {
-            System.out.println("Ovakav snapshot ne postoji");
+            System.out.println(OVAKAV_SNAPSHOT_NE_POSTOJI);
         }
     }
 

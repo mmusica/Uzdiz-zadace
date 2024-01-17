@@ -11,7 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class POCommandHandler extends UserCommandHandler{
-    final String regexPo = "^PO '(.+)' \\S+ [ND]$";
+    static final String regexPo = "^PO '(.+)' \\S+ [ND]$";
     final Pattern patternPo = Pattern.compile(regexPo);
     public POCommandHandler(UserCommandHandler next) {
         super(next);

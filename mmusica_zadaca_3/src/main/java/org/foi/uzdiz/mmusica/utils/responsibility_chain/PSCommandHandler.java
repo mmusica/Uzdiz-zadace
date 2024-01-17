@@ -59,6 +59,7 @@ public class PSCommandHandler extends UserCommandHandler {
             case "A" -> vozilo.changeState(new ActiveVehicleState(simpleStrategyFactory.getStrategy()));
             case "NI" -> vozilo.changeState(new BrokenVehicleState());
             case "NA" -> vozilo.changeState(new InactiveVehicleState());
+            default -> Logger.getGlobal().log(Level.SEVERE, "Ovakvo stanje ne postoji");
         }
     }
 }
