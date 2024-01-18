@@ -94,7 +94,7 @@ public class SystemSnapShotCaretaker {
         if (vr.containsKey(saveWord)) {
             TerminalCommandHandler.getInstance().restore(vr.get(saveWord));
         } else {
-            System.out.println("Ovakav snapshot ne postoji");
+            System.out.println(OVAKAV_SNAPSHOT_NE_POSTOJI);
         }
     }
 }
