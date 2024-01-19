@@ -24,6 +24,9 @@ public class POCommandHandler extends UserCommandHandler{
 
         if (isPromjenaObavijestiCommandValid(command)) {
             handlePromjenaObavijesti(command, commandArray);
+            System.out.println("Uspjesno izvrsena PO naredba");
+        }else{
+            Logger.getGlobal().log(Level.SEVERE, "Nevaljana naredba za obavijest - PO 'primatelj' paket D | N");
         }
     }
     @Override

@@ -12,6 +12,7 @@ public class AdminCommandHandler  extends UserCommandHandler{
         Person personFromAdminCommand = getPersonFromAdminCommand(commandArray);
         if (personFromAdminCommand != null) {
             personFromAdminCommand.setAdmin(true);
+            System.out.println("Osoba je sada Admin");
         } else {
             System.out.println("Osoba ne postoji");
         }

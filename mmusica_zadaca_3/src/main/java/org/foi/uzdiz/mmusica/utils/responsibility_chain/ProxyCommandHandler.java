@@ -20,6 +20,7 @@ public class ProxyCommandHandler extends UserCommandHandler{
         Person personFromProxyCommand = getPersonFromAdminCommand(commandArray);
         if (personFromProxyCommand != null) {
             subscribeToAllPackages(personFromProxyCommand);
+            System.out.println("Naredba izvrsena");
         } else {
             System.out.println("Osoba ne postoji");
         }
@@ -32,8 +33,6 @@ public class ProxyCommandHandler extends UserCommandHandler{
     private void subscribeToAllPackages(Person person) {
         PackageSubscriber packageSubscriber = new PackageSubscriberProxy(new PackageSubscriberImpl());
         List<Paket> allPackages = RepositoryManager.getINSTANCE().getPackageRepository().getAll();
-        allPackages.forEach(paket -> {
-            packageSubscriber.subscribe(paket, person);
-        });
+        allPackages.forEach(paket -> packageSubscriber.subscribe(paket, person));
     }
 }

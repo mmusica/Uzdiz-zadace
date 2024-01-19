@@ -30,6 +30,9 @@ public class PSCommandHandler extends UserCommandHandler {
         String command = stringBuilder.toString().trim();
         if (isPromjenaStanjaCommandValid(command)) {
             handlePromjenaStanja(commandArray);
+            System.out.println("Naredba izvrsena");
+        }else{
+            Logger.getGlobal().log(Level.SEVERE, "Naredba za stanje u krivom formatu: PS VŽ100PK A | NI | NA");
         }
     }
 
@@ -53,7 +56,6 @@ public class PSCommandHandler extends UserCommandHandler {
     }
 
     private void voziloChangeState(Vehicle vozilo, String s) {
-
         SimpleStrategyFactory simpleStrategyFactory = new SimpleStrategyFactory();
         switch (s) {
             case "A" -> vozilo.changeState(new ActiveVehicleState(simpleStrategyFactory.getStrategy()));
