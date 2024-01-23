@@ -14,12 +14,14 @@ PROXY {Ime i prezime} - npr. PROXY Pero Kos - pretplacuje korisnika kao Observer
 UNPROXY {Ime i prezime} - npr. korisnik Pero Kos - vise ne prima obavijesti za nijedan paket
 
 PO 'primatelja/pošiljatelja' paket [D | N]
+
   ● D – šalju se obavijesti
   ● N – ne šalju se obavijesti
   Npr. PO 'Pero Kos' N CROVŽ0001 - N - korisnik Pero Kos više ne prima obavijesti za pakete
   
 PS
 Sintaksa:
+
 ■ PS vozilo [A | NI | NA]
   ● A – aktivno
   ● NI – nije ispravno
