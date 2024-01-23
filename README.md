@@ -16,15 +16,20 @@ UNPROXY {Ime i prezime} - npr. korisnik Pero Kos - vise ne prima obavijesti za n
 PO 'primatelja/pošiljatelja' paket [D | N]
 
   ● D – šalju se obavijesti
+ 
   ● N – ne šalju se obavijesti
+  
   Npr. PO 'Pero Kos' N CROVŽ0001 - N - korisnik Pero Kos više ne prima obavijesti za pakete
   
 PS
 Sintaksa:
 
 ■ PS vozilo [A | NI | NA]
+  
   ● A – aktivno
+  
   ● NI – nije ispravno
+ 
   ● NA nije aktivno
   Npr.  PS VŽ100PK NI - Vozilu VŽ100PK postavlja se status da nije ispravno.
 
